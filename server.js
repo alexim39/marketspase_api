@@ -6,11 +6,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 
-import GetStartedRouter from './src/apps/get-started/routes/get-started.route.js';
-import partnerRouter from './src/apps/partner/routes/partner.route.js';
-import contactRouter from './src/apps/contact/routes/contact.route.js';
-import userBoookingRouter from './src/apps/booking/routes/booking.route.js';
-import emailSubscriptionRouter from './src/apps/email-subscription/routes/email-subscription.route.js';
+import GetStartedRouter from './src/apps/get-started/index.js';
+import partnerRouter from './src/apps/partner/index.js';
+import contactRouter from './src/apps/contact/index.js';
+import userBookingRouter from './src/apps/booking/index.js';
+import emailSubscriptionRouter from './src/apps/email-subscription/index.js';
 
 
 const port = process.env.PORT || 3000;
@@ -51,7 +51,7 @@ app.get('/', (req, res) => res.send('Node server is up and running'));
 app.use('/get-started', GetStartedRouter);
 app.use('/partners', partnerRouter);
 app.use('/contact', contactRouter);
-app.use('/booking', userBoookingRouter);
+app.use('/booking', userBookingRouter);
 app.use('/emailSubscription', emailSubscriptionRouter);
 
 

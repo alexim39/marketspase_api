@@ -6,7 +6,7 @@ import {
     getPartner, updateYoutubePage, updateInstagramPage,
     partnerSignout, updateFacebookPage, updateLinkedinPage,
     updateProfile, updateWhatsappGroupLink, updateWhatsappChatLink,
-    updateUsername, unfollowPartner, checkFollowStatus, requestPasswordReset ,
+    updateUsername, unfollowPartner, checkFollowStatus,
     changePassword, updateProfession, followPartner, getPartnersOf, getPartnerById
 } from '../controllers/partner.controller.js'
 
@@ -71,9 +71,5 @@ partnerRouter.get('/getPartnersOf/:partnerId', getPartnersOf);
 
 // get partner by id
 partnerRouter.get('/getById/:partnerId', getPartnerById);
-
-// partner reset password request
-partnerRouter.post('/reset-password-request', requestPasswordReset );
-
 
 export default partnerRouter;

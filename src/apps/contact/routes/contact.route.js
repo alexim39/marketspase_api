@@ -6,7 +6,6 @@ const contactRouter = express.Router();
 
 // User contact
 contactRouter.post('/submit', ContactController);
-
 // Download business guide pdf
 contactRouter.post('/guide-download', GuideDownloadController);
 

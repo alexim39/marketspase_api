@@ -1,34 +1,5 @@
 import {ContactModel, GuideDownloadModel} from '../models/contact.model.js';
-import nodemailer from 'nodemailer';
-
-
-// Create a Nodemailer transporter
-const transporter = nodemailer.createTransport({
-    host: 'async.ng',
-    secure: true,
-    port: 465,
-    auth: {
-      user: 'alex.i@async.ng', // replace with your email
-      pass: process.env.EMAILPASS, // replace with your password
-    },
-});
-  
-// Function to send email
-const sendEmail = async (email, subject, message) => {
-    try {
-        await transporter.sendMail({
-        //from: 'Do-not-reply@async.ng', // replace with your Gmail email
-        from: 'Do-not-reply@marketspase.com', // replace with your Gmail email
-        to: email,
-        subject: subject,
-        html: message,
-        });
-        console.log(`Email sent to ${email}`);
-    } catch (error) {
-        console.error(`Error sending email to ${email}: ${error.message}`);
-    }
-};
-
+import { sendEmail } from "../../../services/emailService.js";
   
 // User contact contnroller
 export const ContactController = async (req, res) => {

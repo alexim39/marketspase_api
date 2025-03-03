@@ -8,7 +8,6 @@ const GetStartedRouter = express.Router();
 
 // prospet user survey
 GetStartedRouter.post('/survey', prospectSurveyFormHandler);
-
 // prospet user survey
 GetStartedRouter.post('/signup', prospectSignUpFormHandler);
 

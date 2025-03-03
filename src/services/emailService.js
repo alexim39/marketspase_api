@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async (email, subject, htmlContent) => {
   try {
     await transporter.sendMail({
-      from: 'Do-not-reply@marketSpase.com', // Sender email
+      from: 'Do-not-reply@marketspase.com', // Sender email
       to: email,
       subject: subject,
       html: htmlContent,
