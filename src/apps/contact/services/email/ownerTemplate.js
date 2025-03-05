@@ -1,11 +1,11 @@
-export const ownerEmailTemplate = (userData) => `
+export const ownerContactEmailTemplate = (userData) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
     <header style="text-align: center; padding: 10px; background-color: #f4f4f4;">
       <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #0e0d17;">MarketSpase</span>
     </header>
     <main style="padding: 20px;">
-      <h1>MarketSpase Contact Request</h1>
-      <p>A new user with named <strong>${userData.name.toUpperCase()} ${userData.surname.toUpperCase()}</strong> and email <strong>${userData.email}</strong> just sent a contact request in MarketSpase</p>
+      <h1>MarketSpase Support Request</h1>
+      <p>A new user with named <strong>${userData.name.toUpperCase()} ${userData.surname.toUpperCase()}</strong>, email <strong>${userData.email}</strong> and request ID <strong>${userData.requestID}</strong> just sent a contact request in MarketSpase</p>
       <p>You will need to follow up with the user via email at once.</p>
 
       <h3>Message Details</h3>

@@ -1,4 +1,4 @@
-export const userWelcomeEmailTemplate = (userData) => `
+export const userContactEmailTemplate = (userData) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
 
     <header style="text-align: center; padding: 10px; background-color: #f4f4f4;">

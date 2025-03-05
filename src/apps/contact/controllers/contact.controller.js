@@ -1,8 +1,8 @@
 import {ContactModel, GuideDownloadModel} from '../models/contact.model.js';
 import { sendEmail } from "../../../services/emailService.js";
-import { ownerEmailTemplate } from '../services/email/ownerTemplate.js';
+import { ownerContactEmailTemplate } from '../services/email/ownerTemplate.js';
 import { userGuideTemplate } from '../services/email/userGuideTemplate.js';
-import { userWelcomeEmailTemplate } from '../services/email/userTemplate.js';
+import { userContactEmailTemplate } from '../services/email/userTemplate.js';
 
 
 //generate a numerical id.
@@ -31,14 +31,14 @@ export const ContactController = async (req, res) => {
         });
 
         // Send email to form owner
-        const ownerSubject = 'MarketSpase Contact Request';
-        const ownerMessage = ownerEmailTemplate(contactObject);
+        const ownerSubject = 'MarketSpase Support Request';
+        const ownerMessage = ownerContactEmailTemplate(contactObject);
         const ownerEmails = ['ago.fnc@gmail.com'];
         await Promise.all(ownerEmails.map(email => sendEmail(email, ownerSubject, ownerMessage)));
 
         // Send welcome email to the user
         const userSubject = `MarketSpase Support Request - ${requestID}`;
-        const userMessage = userWelcomeEmailTemplate(contactObject);
+        const userMessage = userContactEmailTemplate(contactObject);
         await sendEmail(contactObject.email, userSubject, userMessage);
 
         res.status(200).json(contactObject);
