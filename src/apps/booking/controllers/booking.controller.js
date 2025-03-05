@@ -23,7 +23,7 @@ export const bookingForm = async (req, res) => {
     });
 
     // Send email to owner
-    const ownerSubject = "MarketSpase One-on-One Booking";
+    const ownerSubject = "MarketSpase Session Booking";
     const ownerMessage = ownerEmailTemplate(userBooking);
     const ownerEmails = ["ago.fnc@gmail.com"];
     for (const email of ownerEmails) {
@@ -32,7 +32,7 @@ export const bookingForm = async (req, res) => {
 
     // Send email to the user
     const userSubject =
-      "Your One-on-One Session is Confirmed – Let’s Meet in the space!";
+      "Your Session is Confirmed – Let’s Meet in the space!";
     const userMessage = userNotificationEmailTemplate(userBooking);
     await sendEmail(userBooking.email, userSubject, userMessage);
 

@@ -1,6 +1,7 @@
 import {ContactModel, GuideDownloadModel} from '../models/contact.model.js';
 import { sendEmail } from "../../../services/emailService.js";
 import { ownerEmailTemplate } from '../services/email/ownerTemplate.js';
+import { userGuideTemplate } from '../services/email/userGuideTemplate.js';
 import { userWelcomeEmailTemplate } from '../services/email/userTemplate.js';
 
 
@@ -66,24 +67,11 @@ export const GuideDownloadController = async (req, res) => {
             username: req.body.username,
         });  
 
-        // Send email after successfully submitting the records
-        const emailSubject = 'MarketSpase Business Guide Download';
-        const emailMessage = `
-            <h1>Business Guide Download Form</h1>
-            <p>Kindly note that ${req.body.name} ${req.body.surname} downloaded the business guide document marketspase webiste.</p>
-
-            <br>
-            <h1>Complete Prospect Response</h1>
-            <p>Name: ${req.body.name}</p>
-            <p>Surname: ${req.body.surname}</p>
-            <p>Email address: ${req.body.email}</p>
-        `;
-
-        const emailsToSend = ['ago.fnc@gmail.com'];
-
-        for (const email of emailsToSend) {
-            await sendEmail(email, emailSubject, emailMessage);
-        }
+        // Send email to form owner
+        const ownerSubject = 'MarketSpase Business Guide Download';
+        const ownerMessage = userGuideTemplate(downloadObject);
+        const ownerEmails = ['ago.fnc@gmail.com'];
+        await Promise.all(ownerEmails.map(email => sendEmail(email, ownerSubject, ownerMessage)));
 
         res.status(200).json(downloadObject);
 
