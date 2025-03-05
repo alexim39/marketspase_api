@@ -2,7 +2,7 @@ export const userWelcomeEmailTemplate = (userData) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
 
     <header style="text-align: center; padding: 10px; background-color: #f4f4f4;">
-      <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #0e0d17;">MarketSpase</span>
+      <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #050111;">MarketSpase</span>
     </header>
 
     <main style="padding: 20px;">
@@ -15,6 +15,7 @@ export const userWelcomeEmailTemplate = (userData) => `
       </p>
 
     </main>
+    <br>
     <br>
   </div>
 `;

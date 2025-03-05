@@ -13,7 +13,7 @@ export const userNotificationEmailTemplate = (userBooking) => {
   return `  
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">  
       <header style="text-align: center; padding: 10px; background-color: #f4f4f4;">  
-        <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #0e0d17;">MarketSpase</span>  
+        <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #050111;">MarketSpase</span>  
       </header>  
 
       <main style="padding: 20px;">  
@@ -48,7 +48,7 @@ export const userNotificationEmailTemplate = (userBooking) => {
         </ul>  
 
         <p>  
-          If you have further questions, please visit our <a href="https://marketspase.com/faq" style="color: #007BFF;">FAQ page</a> for answers to some questions about our business or reach out to us at contacts@marketspase.com  
+          If you have further questions, please visit our <a href="https://marketspase.com/faq" style="color: #050111;">FAQ page</a> for answers to some questions about our business or reach out to us at contacts@marketspase.com  
         </p>  
 
         <p>  

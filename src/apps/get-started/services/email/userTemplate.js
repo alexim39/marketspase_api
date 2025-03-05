@@ -2,7 +2,7 @@ export const userWelcomeEmailTemplate = (surveyData) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
 
     <header style="text-align: center; padding: 10px; background-color: #f4f4f4;">
-      <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #0e0d17;">MarketSpase</span>
+      <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #050111;">MarketSpase</span>
     </header>
 
     <main style="padding: 20px;">
@@ -11,11 +11,11 @@ export const userWelcomeEmailTemplate = (surveyData) => `
       <p>Hi <strong>${surveyData.name.toUpperCase()}</strong>,</p>
 
       <p>
-        Thank you for signing up on our platform. We are excited to introduce you to a unique online business model for creating residual income.
+        Thank you for signing up on our platform! We're thrilled to introduce you to a unique online business model for creating residual income.
       </p>
 
       <p>
-        MarketSpase is a digital business platform that will enables you to start and grow your own online business by securing a space in the internet ecosystem.
+        MarketSpase is a digital business platform enabling you to start and grow your own online business by purchasing a digital real estate asset in the internet ecosystem.
       </p>
 
       <p>
@@ -34,7 +34,7 @@ export const userWelcomeEmailTemplate = (surveyData) => `
       </p>
 
       <p>
-        If you have any questions, please visit our <a href="https://marketspase.com/faq" style="color:rgb(0, 29, 60);">FAQ page</a> for answers to some questions about our business or reach out to us at contacts@marketspase.com
+        If you have any questions, please visit our <a href="https://marketspase.com/faq" style="color: #050111;">FAQ page</a> for answers to some questions about our business or reach out to us at contacts@marketspase.com
       </p>
 
       <p>
@@ -50,9 +50,11 @@ export const userWelcomeEmailTemplate = (surveyData) => `
       </p>
 
       <div style="text-align: center;">
-        <a href="https://platform.marketspase.com" style="padding: 10px 20px; background-color: #28A745; color: white; text-decoration: none; border-radius: 5px; text-align: center; margin: 1em 0;">Login Now</a>
+        <a href="https://platform.marketspase.com" style="padding: 10px 20px; background-color: #050111; color: white; text-decoration: none; border-radius: 5px; text-align: center; margin: 1em 0;">Login Now</a>
       </div>
 
     </main>
+    <br>
+    <br>
   </div>
 `;
