@@ -29,6 +29,16 @@ const contactSchema = mongoose.Schema(
             //unique: true,
             required: [true, "Please enter message"]
         },
+        status: {
+            type: String,
+            default: 'Open',
+            //required: [true, "Please enter username"]
+        },
+        requestID: {
+            type: String,
+            default: 'Open',
+            //required: [true, "Please enter username"]
+        },
         
        
     },

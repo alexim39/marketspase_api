@@ -1,19 +1,18 @@
-export const ownerEmailTemplate = (surveyData) => `
+export const ownerEmailTemplate = (userData) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
     <header style="text-align: center; padding: 10px; background-color: #f4f4f4;">
       <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #0e0d17;">MarketSpase</span>
     </header>
     <main style="padding: 20px;">
-      <h2>New MarketSpase Sign Up</h2>
-      <p>A new sign up with named <strong>${surveyData.name.toUpperCase()} ${surveyData.surname.toUpperCase()}</strong> with email <strong>${surveyData.email}</strong> just signed up in MarketSpase</p>
-      <p>You may need to follow up with the user via WhatsApp or phone call.</p>
+      <h1>MarketSpase Contact Request</h1>
+      <p>A new user with named <strong>${userData.name.toUpperCase()} ${userData.surname.toUpperCase()}</strong> and email <strong>${userData.email}</strong> just sent a contact request in MarketSpase</p>
+      <p>You will need to follow up with the user via email at once.</p>
 
-      <h3>Full Contact Details</h3>
+      <h3>Message Details</h3>
 
       <ul>
-        <li><strong>Name: </strong> ${surveyData.name.toUpperCase()}</ol>
-        <li><strong>Surname: </strong> ${surveyData.surname.toUpperCase()}</li>
-        <li><strong>Email address: </strong> ${surveyData.email}</li>
+        <li><strong>Subject: </strong> ${userData.subject}</ol>
+        <li><strong>Messsage: </strong> ${userData.message}</li>
       </ul>
 
       <br>

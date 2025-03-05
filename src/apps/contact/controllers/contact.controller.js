@@ -1,8 +1,21 @@
 import {ContactModel, GuideDownloadModel} from '../models/contact.model.js';
 import { sendEmail } from "../../../services/emailService.js";
-  
+import { ownerEmailTemplate } from '../services/email/ownerTemplate.js';
+import { userWelcomeEmailTemplate } from '../services/email/userTemplate.js';
+
+
+//generate a numerical id.
+function generateNumericContactRequestId(length = 8) {
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += Math.floor(Math.random() * 10); // Generates a random digit (0-9)
+    }
+    return result;
+}
+
 // User contact contnroller
 export const ContactController = async (req, res) => {
+    const requestID = generateNumericContactRequestId();
     try {
 
         //console.log('sent==',req.body);
@@ -13,28 +26,19 @@ export const ContactController = async (req, res) => {
             email: req.body.email,
             subject: req.body.subject,
             message: req.body.message,
+            requestID: requestID
         });
 
-        // Send email after successfully submitting the records
-        const emailSubject = 'MarketSpase Contact Form';
-        const emailMessage = `
-            <h1>Contact Form</h1>
-            <p>Kindly note that ${req.body.name} ${req.body.surname} filled the contact form on Diamond Project webiste.</p>
+        // Send email to form owner
+        const ownerSubject = 'MarketSpase Contact Request';
+        const ownerMessage = ownerEmailTemplate(contactObject);
+        const ownerEmails = ['ago.fnc@gmail.com'];
+        await Promise.all(ownerEmails.map(email => sendEmail(email, ownerSubject, ownerMessage)));
 
-            <br>
-            <h1>Complete Prospect Response</h1>
-            <p>Name: ${req.body.name}</p>
-            <p>Surname: ${req.body.surname}</p>
-            <p>Email address: ${req.body.email}</p>
-            <p>Subject: ${req.body.subject}</p>
-            <p>Messsage: ${req.body.message}</p>
-        `;
-
-        const emailsToSend = ['ago.fnc@gmail.com'];
-
-        for (const email of emailsToSend) {
-            await sendEmail(email, emailSubject, emailMessage);
-        }
+        // Send welcome email to the user
+        const userSubject = `MarketSpase Support Request - ${requestID}`;
+        const userMessage = userWelcomeEmailTemplate(contactObject);
+        await sendEmail(contactObject.email, userSubject, userMessage);
 
         res.status(200).json(contactObject);
 

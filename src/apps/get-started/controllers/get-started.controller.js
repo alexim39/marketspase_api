@@ -41,7 +41,7 @@ export const prospectSurveyFormHandler = async (req, res) => {
 
 /**
  * Handles prospect sign up form submissions.
- * * - Validates the request data.
+ * - Validates the request data.
  * - Checks if the prospect already exists as a partner.
  * - Retrieves prospect data from the Survey collection.
  * - Hashes the password and generates a unique username.
