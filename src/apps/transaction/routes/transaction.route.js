@@ -1,9 +1,26 @@
 import express from 'express';
-import { createTransaction} from '../controllers/transaction.controller.js'
+import { 
+    confirmPayment,
+    getTransactions,
+    singleSMSCharge,
+    bulkSMSCharge, withdrawRequest
+} from '../controllers/transaction.controller.js'
 
-const transactionRouter = express.Router();
+const TransactionRouter = express.Router();
 
-// user new plan purchase transaction
-transactionRouter.post('/plan', createTransaction);
+// confirm payment
+TransactionRouter.post('/confirm-payment', confirmPayment);
 
-export default transactionRouter;
+// get transactions
+TransactionRouter.get('/transaction/:partnerId', getTransactions);
+
+// single sms charger
+TransactionRouter.get('/single-sms-charge/:partnerId', singleSMSCharge);
+
+// bulk sms charger
+TransactionRouter.post('/bulk-sms-charge', bulkSMSCharge);
+
+// confirm payment
+TransactionRouter.post('/withdraw-request', withdrawRequest);
+
+export default TransactionRouter;

@@ -1,4 +1,4 @@
-import { TransactionModel } from "../../models/transaction.model.js";
+import { PlanModel } from "../../models/plan.model.js";
 import { PartnersModel } from "../../../partner/models/partner.model.js";
 
 export const CalculateCompensationAndDistribute = async (amount) => {
@@ -40,7 +40,7 @@ export const CalculateCompensationAndDistribute = async (amount) => {
     const transactions = [];
 
     for (const plan of plans) {
-      const result = await TransactionModel.aggregate([
+      const result = await PlanModel.aggregate([
         { $match: { status: 'success', plan: plan } },  // Filter by plan and status
         { $sample: { size: 1 } },                       // Randomly select 1 transaction for this plan
         { $group: {                                     // Ensure unique partner for each plan type
