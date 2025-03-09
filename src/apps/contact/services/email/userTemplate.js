@@ -11,7 +11,7 @@ export const userContactEmailTemplate = (userData) => `
       <p>Hi <strong>${userData.name.toUpperCase()}</strong>,</p>
 
       <p>
-        Thank you for reaching out to our support and an agent will respond to you shortly. Your request has been submitted with request number ${userData.requestID}
+        Thank you for reaching out to our support. Someone will respond to you shortly. Your request has been submitted with request number ${userData.requestID}.
       </p>
 
     </main>

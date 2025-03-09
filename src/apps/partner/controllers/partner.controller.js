@@ -71,7 +71,28 @@ export const partnerSignout = asyncHandler(async (req, res) => {
 });
 
 
+// Check if a partner exists
+export const getBalance = asyncHandler(async (req, res) => {
+  const id = req.query.id;
 
+  if (!id) {
+    return res.status(400).json({ error: 'ID is required' });
+  }
+
+  try {
+    // Assuming the id is the _id of the document.
+    const partner = await PartnersModel.findById(id);
+
+    if (!partner) {
+      return res.status(404).json({ error: 'Partner not found' });
+    }
+
+    res.json({ partner: { balance: partner.balance } });
+  } catch (error) {
+    console.error('Error fetching partner:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
 
 
 

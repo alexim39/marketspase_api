@@ -1,6 +1,7 @@
 import express from 'express';
 import { 
-    checkPartnerUsername, getPartner, partnerSignout, partnerSignin
+    checkPartnerUsername, getPartner, partnerSignout, partnerSignin,
+    getBalance
 } from '../controllers/partner.controller.js'
 
 const partnerRouter = express.Router();
@@ -13,5 +14,7 @@ partnerRouter.get('/check-username/:username', checkPartnerUsername);
 partnerRouter.get('/partner', getPartner);
 // partner logout
 partnerRouter.post('/signout', partnerSignout);
+// get a partner balance
+partnerRouter.get('/balance', getBalance);
 
 export default partnerRouter;

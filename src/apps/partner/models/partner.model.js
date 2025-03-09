@@ -70,44 +70,7 @@ const partnersSchema = mongoose.Schema(
     },
     skill: {
       type: String,
-    },
-    // whatsappGroupLink: {
-    //   type: String,
-    // },
-    // whatsappChatLink: {
-    //   type: String,
-    // },
-    // testimonial: {
-    //   type: String,
-    // },
-    // facebookPage: {
-    //   type: String,
-    // },
-    // linkedinPage: {
-    //   type: String,
-    // },
-    // youtubePage: {
-    //   type: String,
-    // },
-    // instagramPage: {
-    //   type: String,
-    // },
-    // tiktokPage: {
-    //   type: String,
-    // },
-    // twitterPage: {
-    //   type: String,
-    // },
-    // followers: [{
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'Partner'
-    // }],
-    // resetPasswordToken: {
-    //   type: String,
-    // },
-    // resetPasswordExpires: {
-    //   type: String,
-    // },
+    }
   },
   {
     timestamps: true

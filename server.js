@@ -7,10 +7,11 @@ import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 
 import GetStartedRouter from './src/apps/get-started/index.js';
-import partnerRouter from './src/apps/partner/index.js';
-import contactRouter from './src/apps/contact/index.js';
-import userBookingRouter from './src/apps/booking/index.js';
-import emailSubscriptionRouter from './src/apps/email-subscription/index.js';
+import PartnerRouter from './src/apps/partner/index.js';
+import ContactRouter from './src/apps/contact/index.js';
+import BookingRouter from './src/apps/booking/index.js';
+import EmailSubscriptionRouter from './src/apps/email-subscription/index.js';
+import TransactionRouter from './src/apps/transaction/index.js';
 
 
 const port = process.env.PORT || 3000;
@@ -49,10 +50,11 @@ app.use(cors({
 /* Routes */
 app.get('/', (req, res) => res.send('Node server is up and running'));
 app.use('/get-started', GetStartedRouter);
-app.use('/partners', partnerRouter);
-app.use('/contact', contactRouter);
-app.use('/booking', userBookingRouter);
-app.use('/emailSubscription', emailSubscriptionRouter);
+app.use('/partners', PartnerRouter);
+app.use('/contact', ContactRouter);
+app.use('/booking', BookingRouter);
+app.use('/emailSubscription', EmailSubscriptionRouter);
+app.use('/transaction', TransactionRouter);
 
 
 // Convert `import.meta.url` to `__dirname` equivalent

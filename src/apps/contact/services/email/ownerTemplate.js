@@ -5,7 +5,7 @@ export const ownerContactEmailTemplate = (userData) => `
     </header>
     <main style="padding: 20px;">
       <h1>MarketSpase Support Request</h1>
-      <p>A new user with named <strong>${userData.name.toUpperCase()} ${userData.surname.toUpperCase()}</strong>, email <strong>${userData.email}</strong> and request ID <strong>${userData.requestID}</strong> just sent a contact request in MarketSpase</p>
+      <p>A new user named <strong>${userData.name.toUpperCase()} ${userData.surname.toUpperCase()}</strong>, email <strong>${userData.email}</strong> and request ID <strong>${userData.requestID}</strong> just sent a contact request in MarketSpase</p>
       <p>You will need to follow up with the user via email at once.</p>
 
       <h3>Message Details</h3>

@@ -36,10 +36,11 @@ export const ContactController = async (req, res) => {
         const ownerEmails = ['ago.fnc@gmail.com'];
         await Promise.all(ownerEmails.map(email => sendEmail(email, ownerSubject, ownerMessage)));
 
-        // Send welcome email to the user
+        // Send email to the user
         const userSubject = `MarketSpase Support Request - ${requestID}`;
         const userMessage = userContactEmailTemplate(contactObject);
-        await sendEmail(contactObject.email, userSubject, userMessage);
+        const receiverEmails = [contactObject.email, 'contacts@marketspase.com'];
+        await Promise.all(receiverEmails.map(email => sendEmail(email, userSubject, userMessage)));
 
         res.status(200).json(contactObject);
 
