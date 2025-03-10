@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { updateAdStatus } from '../services/adService.js';
 
 /* Campaign schema*/
 const campaignSchema = mongoose.Schema({
@@ -48,22 +49,25 @@ const campaignSchema = mongoose.Schema({
     required: true,
     default: "Pending"
   },
-  visits: {
-    type:Number,
-    default: 0
+  isActive: {
+    type: Boolean,
+    default: false // New field to track ad status
   },
   userDevice: {
     type: String,
     //unique: true,
     //required: [true, "Please enter surname"]
   },
-   
 },
 {
     timestamps: true
 }
 );
 
+/* Middleware to update isActive status on save */
+campaignSchema.post('save', async function () {
+  await updateAdStatus();
+});
 
 /* Model */
 export const CampaignModel = mongoose.model('Campaign', campaignSchema);

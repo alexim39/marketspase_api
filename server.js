@@ -6,6 +6,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 
+import './src/services/cronJob.js'; // Import cron job to start it
+
+
 import GetStartedRouter from './src/apps/get-started/index.js';
 import PartnerRouter from './src/apps/partner/index.js';
 import ContactRouter from './src/apps/contact/index.js';

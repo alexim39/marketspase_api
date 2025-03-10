@@ -35,7 +35,7 @@ export const CalculateCompensationAndDistribute = async (amount) => {
 
     //console.log(`Distribution Amount: ₦${distributionAmount}`);
 
-    // Fetch one random successful transaction for each plan
+   /*  // Fetch one random successful transaction for each plan
     const plans = ['StarterSpase', 'GrowthSpase', 'EliteSpase', 'EmpireSpase'];
     const transactions = [];
 
@@ -57,9 +57,43 @@ export const CalculateCompensationAndDistribute = async (amount) => {
         console.log(`No successful transactions found for plan: ${plan}`);
         return;  // Exit if any plan has no transactions
       }
+    } */
+
+      
+
+      
+    // Fetch 4 random successful transactions for each plan with an active ad
+    const transactions = [];
+
+    const result = await PlanModel.aggregate([
+      { $match: { status: 'success' } },                 // Match successful transactions only
+      {
+        $lookup: {
+          from: 'campaigns',                             // Correct collection name (make sure it's right)
+          localField: 'partnerId',
+          foreignField: 'createdBy',
+          as: 'adsInfo'
+        }
+      },
+      { $unwind: '$adsInfo' },                           // Unwind to access individual ads
+      { $match: { 'adsInfo.isActive': true } },          // Check for active ads using isActive field
+      {
+        $group: {                                        // Group by partner to ensure uniqueness
+          _id: '$partnerId',
+          transaction: { $first: '$$ROOT' }              // Take the first transaction per partner
+        }
+      },
+      { $sample: { size: 4 } },                          // Randomly select 4 unique partners
+      { $replaceRoot: { newRoot: '$transaction' } }      // Replace root to get original transaction structure
+    ]);
+
+    if (result.length > 0) {
+      console.log(`Found transactions:`, result);
+      transactions.push(...result);                      // Add selected transactions to the list
+    } else {
+      console.log(`No successful transactions with active ads found.`);
     }
 
-    //console.log("Randomly Selected Transactions:", transactions);
 
     // Process each transaction
     for (const transaction of transactions) {

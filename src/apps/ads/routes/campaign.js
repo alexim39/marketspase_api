@@ -2,11 +2,11 @@ import express from 'express';
 import { 
     createFacebookCampaign,
     getCampaignsCreatedBy,
-    recordVisits,
     createYoutubeCampaign,
     createLinkedinCampaign,
     getCampaign
 } from '../controllers/campaign.js'
+import { getActiveAds } from '../services/adService.js';
 
 const CampaignRouter = express.Router();
 
@@ -25,7 +25,15 @@ CampaignRouter.get('/all-createdBy/:createdBy', getCampaignsCreatedBy);
 // Get a camapaign
 CampaignRouter.get('/:id', getCampaign);
 
-// record visit
-CampaignRouter.post('/visits', recordVisits);
+// Get all active ads
+/* Endpoint to get all active ads */
+CampaignRouter.get('/active-ads', async (req, res) => {
+    try {
+      const activeAds = await getActiveAds();
+      res.status(200).json(activeAds);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch active ads' });
+    }
+});
 
 export default CampaignRouter;

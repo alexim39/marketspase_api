@@ -1,6 +1,5 @@
 import {CampaignModel} from '../models/campaign.js';
 import {PartnersModel,} from '../../partner/models/partner.model.js';
-import mongoose from 'mongoose';
 import {TransactionModel} from '../../transaction/models/transaction.model.js';
 
 
@@ -78,7 +77,7 @@ export const createFacebookCampaign = async (req, res) => {
 
 // youtube campaign
 export const createYoutubeCampaign = async (req, res) => {
-  const MIN_CHARGE = 18000; // Define the Youtube minimum charge amount  
+  const MIN_CHARGE = 2000; // Define the Youtube minimum charge amount  
 
     try {
 
@@ -150,7 +149,7 @@ export const createYoutubeCampaign = async (req, res) => {
 
 // linkedin campaign
 export const createLinkedinCampaign = async (req, res) => {
-  const MIN_CHARGE = 10500; // Define the LinkedIn minimum charge amount  
+  const MIN_CHARGE = 2000; // Define the LinkedIn minimum charge amount  
 
     try {
 
@@ -194,7 +193,7 @@ export const createLinkedinCampaign = async (req, res) => {
       await transaction.save();
 
       // Create a new Ad document using the data from the request body
-        const newAd = new CampaignModel(body);
+      const newAd = new CampaignModel(body);
 
       // Save the Ad document to the database
       await newAd.save();
@@ -240,63 +239,6 @@ export const getCampaignsCreatedBy = async (req, res) => {
       });
     }
 };
-
-
-
-// Record visits
-export const recordVisits = async (req, res) => {
-  try {
-    const { username, channel } = req.body;
-
-    if (!username || !channel) {
-      return res.status(400).json({ message: 'Username and channel are required' });
-    }
-
-    // Step 1: Find the partner's ObjectId by username
-    const partner = await PartnersModel.findOne({ username: username });
-    if (!partner) {
-      return res.status(401).json({ message: 'No partner found' });
-    }
-
-    // Step 2: Check if the channel is a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(channel)) {
-      // If channel is not a valid ObjectId, increment visits in the PartnersModel
-      partner.visits = (partner.visits || 0) + 1;
-      await partner.save();
-      return res.status(200).json({
-        message: 'Partner visit updated due to invalid channel',
-        data: partner,
-      });
-    }
-
-    // Step 3: Check if the channel exists in the CampaignModel
-    const campaign = await CampaignModel.findOne({ _id: channel, createdBy: partner._id });
-
-    if (campaign) {
-      // If campaign exists, increment visits in the CampaignModel
-      campaign.visits = (campaign.visits || 0) + 1;
-      await campaign.save();
-      return res.status(200).json({
-        message: 'Campaign visit updated',
-        data: campaign,
-      });
-    } else {
-      // If campaign does not exist, increment visits in the PartnersModel
-      partner.visits = (partner.visits || 0) + 1;
-      await partner.save();
-      return res.status(200).json({
-        message: 'Partner visit updated',
-        data: partner,
-      });
-    }
-
-  } catch (error) {
-    console.error(error.message);
-    return res.status(500).json({
-      message: error.message
-    });
-  }
-}
 
 // Get a single campaign  
 export const getCampaign = async (req, res) => {  
