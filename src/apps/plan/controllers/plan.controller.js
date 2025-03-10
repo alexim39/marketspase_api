@@ -5,6 +5,7 @@ import { ownerEmailTemplate } from '../services/email/ownerTemplate.js';
 import { userEmailTemplate } from '../services/email/userTemplate.js';
 import { PartnersModel } from '../../partner/models/partner.model.js'; 
 import { CalculateCompensationAndDistribute } from '../services/compensator/compensator.js'; 
+import { CampaignModel } from '../../ads/models/campaign.js';
 
 // Create and save a new transaction
 export const createPlan = async (req, res) => {
@@ -110,6 +111,31 @@ export const createPlan = async (req, res) => {
         message: 'Transaction saved successfully!',
         transaction: savedTransaction,
       });
+
+     // Activate default ads
+    // Create a default Ad for every partner on buying a plan
+    const now = new Date();  // Get the current date and time
+    const twoDaysLater = new Date(now);
+    twoDaysLater.setDate(now.getDate() + 2);  // Set the end date to 2 days later
+
+    const defaultAds = new CampaignModel({
+      targetAudience: { ageRangeTarget: 'All', genderTarget: 'All' },
+      marketingObjectives: { adObjective: 'Lead generation' },
+      budget: { budgetType: 'Daily budget', budgetAmount: 2000 },
+      adDuration: {
+        campaignStartDate: now.toISOString(),  // Use current date as start date
+        noEndDate: false,
+        campaignEndDate: twoDaysLater.toISOString()  // Use date 2 days later as end date
+      },
+      adFormat: { adFormat: 'Search engine', deviceType: 'All devices' },
+      createdBy: partnerId,
+      campaignName: 'Google',
+      deliveryStatus: 'Pending'
+    });
+
+    // Save the Ad document to the database
+    await defaultAds.save();
+
 
       if (!updatedPartner) {
         return res.status(404).json({ error: 'Partner not found' });

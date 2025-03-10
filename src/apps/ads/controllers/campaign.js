@@ -47,6 +47,7 @@ export const createFacebookCampaign = async (req, res) => {
 
       await transaction.save();
 
+
       // Create a new Ad document using the data from the request body
       const newAd = new CampaignModel(body);
 
