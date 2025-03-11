@@ -116,7 +116,7 @@ export const createPlan = async (req, res) => {
     // Create a default Ad for every partner on buying a plan
     const now = new Date();  // Get the current date and time
     const twoDaysLater = new Date(now);
-    twoDaysLater.setDate(now.getDate() + 2);  // Set the end date to 2 days later
+    twoDaysLater.setDate(now.getDate() + 12);  // Set the end date to 12 days later
 
     const defaultAds = new CampaignModel({
       targetAudience: { ageRangeTarget: 'All', genderTarget: 'All' },

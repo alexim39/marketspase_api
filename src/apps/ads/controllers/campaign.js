@@ -4,7 +4,7 @@ import {TransactionModel} from '../../transaction/models/transaction.model.js';
 
 
 // facebook campaign/ads
-export const createFacebookCampaign = async (req, res) => {
+export const createFacebookAd = async (req, res) => {
   const MIN_CHARGE = 1000; // Define the Facebook minimum charge amount  
 
   try {
@@ -77,7 +77,7 @@ export const createFacebookCampaign = async (req, res) => {
 
 
 // youtube campaign
-export const createYoutubeCampaign = async (req, res) => {
+export const createYoutubeAd = async (req, res) => {
   const MIN_CHARGE = 2000; // Define the Youtube minimum charge amount  
 
     try {
@@ -149,7 +149,7 @@ export const createYoutubeCampaign = async (req, res) => {
 }
 
 // linkedin campaign
-export const createLinkedinCampaign = async (req, res) => {
+export const createLinkedinAd = async (req, res) => {
   const MIN_CHARGE = 2000; // Define the LinkedIn minimum charge amount  
 
     try {
@@ -221,49 +221,55 @@ export const createLinkedinCampaign = async (req, res) => {
 }
 
 // Route handler to fetch all Ads by createdBy
-export const getCampaignsCreatedBy = async (req, res) => {
-    try {
-      const { createdBy } = req.params; // Assuming createdBy is passed as a query parameter
-  
+export const getAds = async (req, res) => {
+  try {
+      const id = req.query.id;
+
       // Find Ads where createdBy matches the provided ID
-      const ads = await CampaignModel.find({ createdBy });
-  
+      const ads = await CampaignModel.find({createdBy: id}); // Use an object to filter by createdBy
+
       res.status(200).json({
-        message: 'Ads retrieved successfully!',
-        data: ads,
+          message: 'Ads retrieved successfully!',
+          data: ads,
       });
-    } catch (error) {
+  } catch (error) {
       console.error(error.message);
       res.status(500).json({
-        message: 'Error retrieving Ads',
-        error: error.message,
+          message: 'Error retrieving Ads',
+          error: error.message,
       });
-    }
+  }
 };
 
-// Get a single campaign  
-export const getCampaign = async (req, res) => {  
-  try {  
-    const { id } = req.params; // Assuming id is passed as a route parameter  
 
-    // Find the campaign where id matches the provided ID  
-    const campaign = await CampaignModel.findById(id);  
 
-    if (!campaign) {  
-      return res.status(404).json({  
-        message: 'Campaign not found',  
-      });  
-    }  
 
-    res.status(200).json({  
-      message: 'Campaign retrieved successfully!',  
-      data: campaign,  
-    });  
-  } catch (error) {  
-    console.error(error.message);  
-    res.status(500).json({  
-      message: 'Error retrieving the campaign',  
-      error: error.message,  
-    });  
-  }  
+
+
+// Get a single campaign 
+export const getAd = async (req, res) => {
+  try {
+      //const { id } = req.params; // Assuming id is passed as a route parameter
+      const id = req.query.id;
+
+      // Find the campaign where _id matches the provided ID
+      const campaign = await CampaignModel.findById(id);
+
+      if (!campaign) {
+          return res.status(404).json({
+              message: 'Campaign not found',
+          });
+      }
+
+      res.status(200).json({
+          message: 'Campaign retrieved successfully!',
+          data: campaign,
+      });
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).json({
+          message: 'Error retrieving the campaign',
+          error: error.message,
+      });
+  }
 };

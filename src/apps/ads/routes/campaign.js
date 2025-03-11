@@ -1,29 +1,29 @@
 import express from 'express';
 import { 
-    createFacebookCampaign,
-    getCampaignsCreatedBy,
-    createYoutubeCampaign,
-    createLinkedinCampaign,
-    getCampaign
+    createFacebookAd,
+    getAds,
+    createYoutubeAd,
+    createLinkedinAd,
+    getAd
 } from '../controllers/campaign.js'
 import { getActiveAds } from '../services/adService.js';
 
 const CampaignRouter = express.Router();
 
 // create facebook campaign
-CampaignRouter.post('/facebook', createFacebookCampaign);
+CampaignRouter.post('/facebook', createFacebookAd);
 
 // create youtbue campaign
-CampaignRouter.post('/youtube', createYoutubeCampaign);
+CampaignRouter.post('/youtube', createYoutubeAd);
 
 // create linkedin campaign
-CampaignRouter.post('/linkedin', createLinkedinCampaign);
+CampaignRouter.post('/linkedin', createLinkedinAd);
 
 // Get all campaigns createdBy
-CampaignRouter.get('/all-createdBy/:createdBy', getCampaignsCreatedBy);
+CampaignRouter.get('/createdBy', getAds);
 
 // Get a camapaign
-CampaignRouter.get('/:id', getCampaign);
+CampaignRouter.get('/', getAd);
 
 // Get all active ads
 /* Endpoint to get all active ads */

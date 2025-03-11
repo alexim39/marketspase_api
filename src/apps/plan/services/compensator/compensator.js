@@ -88,7 +88,7 @@ export const CalculateCompensationAndDistribute = async (amount) => {
     ]);
 
     if (result.length > 0) {
-      console.log(`Found transactions:`, result);
+      //console.log(`Found transactions:`, result);
       transactions.push(...result);                      // Add selected transactions to the list
     } else {
       console.log(`No successful transactions with active ads found.`);
