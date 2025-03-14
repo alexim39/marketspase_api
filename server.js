@@ -16,6 +16,7 @@ import BookingRouter from './src/apps/booking/index.js';
 import EmailSubscriptionRouter from './src/apps/email-subscription/index.js';
 import PlanRouter from './src/apps/plan/index.js';
 import AdsRouter from './src/apps/ads/index.js';
+import TransactionRouter from './src/apps/transaction/index.js';
 
 
 const port = process.env.PORT || 3000;
@@ -60,6 +61,7 @@ app.use('/booking', BookingRouter);
 app.use('/emailSubscription', EmailSubscriptionRouter);
 app.use('/plan', PlanRouter);
 app.use('/ads', AdsRouter);
+app.use('/transaction', TransactionRouter);
 
 
 // Convert `import.meta.url` to `__dirname` equivalent
