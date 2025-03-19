@@ -1,62 +1,9 @@
 import { TransactionModel } from "../models/transaction.model.js";
-import axios from "axios";
 import { PartnersModel } from "./../../partner/models/partner.model.js";
 import { sendEmail } from "../../../services/emailService.js";
 import { ownerEmailTemplate } from "../services/email/ownerTemplate.js";
 import { userWithdrawalEmailTemplate } from "../services/email/userTemplate.js";
-
-
-// confirm payment
-export const confirmPayment = async (req, res) => {
-  const { reference, partnerId } = req.body;
-  const paymentMethod = "Paystack";
-
-  // Step 1: Verify the transaction with Paystack
-  try {
-    const response = await axios.get(
-      `https://api.paystack.co/transaction/verify/${reference}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.PAYSTACKTOKEN}`, // Replace with your Paystack secret key
-        },
-      }
-    );
-
-    const transactionData = response.data.data;
-    if (transactionData.status !== "success") {
-      return res.status(400).json({ message: "Transaction not successful" });
-    }
-
-    // Step 2: Find the user and update their balance
-    const partner = await PartnersModel.findById(partnerId);
-    if (!partner) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const amountInNaira = transactionData.amount / 100; // Convert kobo to Naira
-    partner.balance += amountInNaira;
-    await partner.save();
-
-    // Step 3: Save the transaction record
-    const transaction = new TransactionModel({
-      partnerId: partner._id,
-      amount: amountInNaira,
-      reference,
-      paymentMethod,
-      transactionType: "Credit",
-      status: transactionData.status,
-    });
-    await transaction.save();
-
-    return res
-      .status(200)
-      .json({ message: "Payment verified and balance updated", partner });
-  } catch (error) {
-    console.error("Payment verification failed:", error);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-};
-
+import { processPayment } from "../services/process-payment.js"
 
 
 
@@ -81,15 +28,13 @@ export const getTransactions = async (req, res) => {
 };
 
 
-
-
 // Partner withdrawal request
 export const withdrawRequest = async (req, res) => {
   const { bank, accountNumber, accountName, amount, partnerId } = req.body;
 
   try {
     // Find the partner by ID
-    const partner = await PartnersModel.findById(partnerId); // Assuming you have a PartnersModel
+    const partner = await PartnersModel.findById(partnerId);
 
     if (!partner) {
       return res.status(400).json({
@@ -99,52 +44,78 @@ export const withdrawRequest = async (req, res) => {
     }
 
     // Check if the partner has sufficient balance
-    if (partner.balance >= amount) {
-      // Deduct the amount
-      partner.balance -= amount;
-
-      // Save the updated partner balance
-      await partner.save();
-
-      // Record the transaction
-      const transaction = new TransactionModel({
-        partnerId: partner._id,
-        amount: amount,
-        status: "Pending",
-        paymentMethod: "Withdrawal",
-        transactionType: "Debit",
-        bankDetail: {
-          bankCode: bank,
-          accountNumber: accountNumber,
-          accountName: accountName,
-        },
-        reference: Math.floor(100000000 + Math.random() * 900000000).toString(),
-      });
-
-      // Send email to owner
-      // const ownerSubject = 'New Withdrawal Request';
-      // const ownerMessage = ownerEmailTemplate(partner, req.body); // Assuming ownerEmailTemplate exists
-      // const ownerEmails = ['ago.fnc@gmail.com'];
-      // for (const email of ownerEmails) {
-      //   await sendEmail(email, ownerSubject, ownerMessage); // Assuming sendEmail function exists
-      // }
-
-      // Send email to the user
-      // const userSubject = 'Withdrawal Request Notification';
-      // const userMessage = userWithdrawalEmailTemplate(partner, req.body); // Assuming userWithdrawalEmailTemplate exists
-      // await sendEmail(partner.email, userSubject, userMessage);
-
-      await transaction.save();
-
-      res.status(200).json({
-        message: "Withdraw request recorded.",
-        data: transaction,
-      });
-    } else {
+    if (partner.balance < amount) {
       return res.status(401).json({
         code: 401,
         message: "Insufficient balance for transaction",
         data: null,
+      });
+    }
+
+    // Deduct the amount from partner's balance
+    partner.balance -= amount;
+    await partner.save();
+
+    // Generate a unique reference ID
+    const reference = Math.floor(100000000 + Math.random() * 900000000).toString();
+
+    // Record the transaction as pending
+    const transaction = new TransactionModel({
+      partnerId: partner._id,
+      amount: amount,
+      status: "Pending",
+      paymentMethod: "Withdrawal",
+      transactionType: "Debit",
+      bankDetail: {
+        bankCode: bank,
+        accountNumber: accountNumber,
+        accountName: accountName,
+      },
+      reference,
+    });
+    await transaction.save();
+
+    // Process the automatic payment
+    const paymentResponse = await processPayment(bank, accountNumber, accountName, amount);
+
+    if (paymentResponse.success) {
+      // Update transaction status to successful
+      transaction.status = "Successful";
+      await transaction.save();
+
+      // // Send email notification to owner
+      // const ownerSubject = "New Withdrawal Processed";
+      // const ownerMessage = ownerEmailTemplate(partner, req.body, "Successful");
+      // const ownerEmails = ["ago.fnc@gmail.com"];
+      // for (const email of ownerEmails) {
+      //   await sendEmail(email, ownerSubject, ownerMessage);
+      // }
+
+      // // Send email notification to the user
+      // const userSubject = "Withdrawal Successful";
+      // const userMessage = userWithdrawalEmailTemplate(partner, req.body, "Successful");
+      // await sendEmail(partner.email, userSubject, userMessage);
+
+      return res.status(200).json({
+        message: "Withdrawal successful, payment has been processed.",
+        data: transaction,
+      });
+    } else {
+      // If payment fails, refund balance and update transaction status
+      partner.balance += amount;
+      await partner.save();
+
+      transaction.status = "Failed";
+      await transaction.save();
+
+      // Notify the user and owner of the failure
+      const failureSubject = "Withdrawal Failed";
+      const failureMessage = userWithdrawalEmailTemplate(partner, req.body, "Failed");
+      await sendEmail(partner.email, failureSubject, failureMessage);
+
+      return res.status(500).json({
+        message: "Payment failed. Your balance has been refunded.",
+        data: transaction,
       });
     }
   } catch (error) {

@@ -4,7 +4,9 @@ import {
     getAds,
     createYoutubeAd,
     createLinkedinAd,
-    getAd
+    getAd,
+    createGoogleAd,
+    createTiktokAd
 } from '../controllers/campaign.js'
 import { getActiveAds } from '../services/adService.js';
 
@@ -14,10 +16,16 @@ const CampaignRouter = express.Router();
 CampaignRouter.post('/facebook', createFacebookAd);
 
 // create youtbue campaign
+CampaignRouter.post('/google', createGoogleAd);
+
+// create youtbue campaign
 CampaignRouter.post('/youtube', createYoutubeAd);
 
 // create linkedin campaign
 CampaignRouter.post('/linkedin', createLinkedinAd);
+
+// create tiktok campaign
+CampaignRouter.post('/tiktok', createTiktokAd);
 
 // Get all campaigns createdBy
 CampaignRouter.get('/createdBy', getAds);
