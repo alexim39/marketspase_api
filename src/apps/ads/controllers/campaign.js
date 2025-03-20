@@ -221,6 +221,7 @@ export const createYoutubeAd = async (req, res) => {
     }
 }
 
+
 // linkedin campaign
 export const createLinkedinAd = async (req, res) => {
   const MIN_CHARGE = 2000; // Define the LinkedIn minimum charge amount  
@@ -390,9 +391,6 @@ export const getAds = async (req, res) => {
 
 
 
-
-
-
 // Get a single campaign 
 export const getAd = async (req, res) => {
   try {
@@ -418,5 +416,32 @@ export const getAd = async (req, res) => {
           message: 'Error retrieving the campaign',
           error: error.message,
       });
+  }
+};
+
+
+
+// Controller Function (deleteAd)
+export const deleteAd = async (req, res) => {
+  try {
+    const id = req.query.id;
+
+      const ad = await CampaignModel.findById(id);
+
+      if (!ad) {
+          return res.status(404).json({ message: 'Ad not found' });
+      }
+
+      // Option 1: Soft delete (recommended)
+      //ad.isActive = false;
+      //await ad.save();
+
+      // Option 2: Hard delete (if you really want to remove the document)
+      await CampaignModel.findByIdAndDelete(id);
+
+      res.status(200).json({ message: 'Ad deleted successfully' });
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: 'Error deleting ad', error: error.message });
   }
 };

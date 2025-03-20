@@ -56,6 +56,11 @@ const campaignSchema = mongoose.Schema({
   userDevice: {
     type: String,
   },
+  leads: {
+    type: Number,
+    required: true,
+    default: 0
+  },
 },
 {
     timestamps: true

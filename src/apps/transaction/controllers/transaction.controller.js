@@ -9,10 +9,10 @@ import { processPayment } from "../services/process-payment.js"
 
 export const getTransactions = async (req, res) => {
   try {
-    const { partnerId } = req.params; // Assuming createdBy is passed as a query parameter
+    const { partnerId } = req.params;
 
-    // Find transactions where partnerId matches the provided ID
-    const transac = await TransactionModel.find({ partnerId });
+    // Find transactions where partnerId matches the provided ID and sort by creation date in descending order
+    const transac = await TransactionModel.find({ partnerId }).sort({ createdAt: -1 });
 
     res.status(200).json({
       message: "Transaction retrieved successfully!",

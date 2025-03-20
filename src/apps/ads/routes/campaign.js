@@ -6,7 +6,8 @@ import {
     createLinkedinAd,
     getAd,
     createGoogleAd,
-    createTiktokAd
+    createTiktokAd,
+    deleteAd
 } from '../controllers/campaign.js'
 import { getActiveAds } from '../services/adService.js';
 
@@ -32,6 +33,9 @@ CampaignRouter.get('/createdBy', getAds);
 
 // Get a camapaign
 CampaignRouter.get('/', getAd);
+
+// Delete a camapaign
+CampaignRouter.delete('/', deleteAd);
 
 // Get all active ads
 /* Endpoint to get all active ads */

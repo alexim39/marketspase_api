@@ -52,11 +52,7 @@ const planSchema = new mongoose.Schema({
     },
     required: true,  // Ensure plan is always set
   },
- /*  linkId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Transaction',
-    default: null
-  }, */
+
 }, {
   timestamps: true,
 });
@@ -64,17 +60,5 @@ const planSchema = new mongoose.Schema({
 // Index to speed up queries based on partnerId and reference
 planSchema.index({ partnerId: 1, reference: 1 });
 
-// Pre-save middleware to set randomized linkId
-/* transactionSchema.pre('save', async function(next) {
-  if (!this.linkId) {
-    const [randomTransaction] = await mongoose.model('Transaction').aggregate([
-      { $sample: { size: 1 } }  // Randomly select one transaction
-    ]);
-
-    this.linkId = randomTransaction ? randomTransaction._id : null;
-  }
-  next();
-});
- */
 // Create and export the model
 export const PlanModel = mongoose.model('Plan', planSchema);
