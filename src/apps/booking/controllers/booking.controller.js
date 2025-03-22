@@ -31,8 +31,7 @@ export const bookingForm = async (req, res) => {
     }
 
     // Send email to the user
-    const userSubject =
-      "Your Session is Confirmed – Let’s Meet in the space!";
+    const userSubject = "Your Session is Confirmed – Let’s Meet in the space!";
     const userMessage = userNotificationEmailTemplate(userBooking);
     await sendEmail(userBooking.email, userSubject, userMessage);
 

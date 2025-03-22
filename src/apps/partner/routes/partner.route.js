@@ -1,6 +1,6 @@
 import express from 'express';
 import { 
-    checkPartnerUsername, getPartner, partnerSignout, partnerSignin,
+    checkPartnerUsername, getPartner, partnerSignout, partnerSignin, accountActivationEmail, activateAccount,
     getBalance, updateProfile, updateProfession, updateUsername, changePassword
 } from '../controllers/partner.controller.js'
 
@@ -27,5 +27,11 @@ partnerRouter.put('/update-username', updateUsername)
 
 // Change password
 partnerRouter.put('/change-password', changePassword)
+
+// partner account activation email request
+partnerRouter.post('/activate', accountActivationEmail);
+
+// partner account activation email request
+partnerRouter.get('/activation/:partnerId', activateAccount);
 
 export default partnerRouter;

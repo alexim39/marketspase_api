@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import dotenv  from "dotenv"
 dotenv.config()
 import mongoose from 'mongoose';
+import { userAccountActivationEmailTemplate } from "../services/email/userActivationTemplate.js";
+import { sendEmail } from "../../../services/emailService.js";
 
 
 // Utility function for error handling
@@ -292,4 +294,71 @@ export const changePassword = async (req, res) => {
   }
 };
 
+// Send email to user for account activation
+export const accountActivationEmail = async (req, res) => {
+  try {
+    const { state, partnerId } = req.body;
+
+    // Validate input
+    if (!partnerId) {
+      return res.status(400).json({ message: 'Partner ID is required' });
+    }
+    if (typeof state !== 'boolean') {
+      return res.status(400).json({ message: 'State must be a boolean' });
+    }
+
+    // Find the partner by ID
+    const partner = await PartnersModel.findById(partnerId);
+
+    if (!partner) {
+      return res.status(404).json({ message: 'Partner not found' });
+    }
+
+    // Update the notification setting
+    // partner.notification = state;
+    // await partner.save();
+ 
+     // Send email to the user
+     const userSubject = "Account Activation Request";
+     const userMessage = userAccountActivationEmailTemplate(partner);
+     await sendEmail(partner.email, userSubject, userMessage);
+
+    res.status(200).json({
+      message: `Account activation email sent successfully`,
+    });
+  } catch (error) {
+    console.error('Error updating notification setting:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+// Activate User Account
+export const activateAccount = async (req, res) => {
+  try {
+
+    const { partnerId } = req.params;
+    
+    const updatedPartner = await PartnersModel.findByIdAndUpdate(
+      partnerId,
+      { status: true },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedPartner) {
+      return res.status(404).json({ message: 'Partner not found' });
+    }
+
+    res.status(200).json({
+      success: true, 
+      message: 'Account activated successfully.', 
+      partner: updatedPartner 
+    });
+
+
+  } catch (error) {
+    console.error('Error activating partner account:', error);
+    return { success: false, message: 'Failed to activate account.' };
+  }
+};
 

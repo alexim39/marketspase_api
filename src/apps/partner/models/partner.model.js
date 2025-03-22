@@ -70,7 +70,11 @@ const partnersSchema = mongoose.Schema(
     },
     skill: {
       type: String,
-    }
+    },
+    notification: {
+      type: Boolean,
+      default: true
+    },
   },
   {
     timestamps: true
