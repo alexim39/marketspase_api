@@ -75,7 +75,24 @@ const partnersSchema = mongoose.Schema(
       type: Boolean,
       default: true
     },
+    darkMode: {
+      type: Boolean,
+      default: false
+    },
+    incomeTarget: {
+      targetAmount: { 
+        type: Number, 
+        default: 1000,
+        required: [true, "Please enter target amount"]
+      },
+      period: { 
+        type: String,
+        default: "monthly",
+        required: [true, "Please enter period"]
+      },
+    },
   },
+
   {
     timestamps: true
   }

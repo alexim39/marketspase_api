@@ -6,6 +6,7 @@ import { userEmailTemplate } from '../services/email/userTemplate.js';
 import { PartnersModel } from '../../partner/models/partner.model.js'; 
 import { CalculateCompensationAndDistribute } from '../services/compensator/compensator.js'; 
 import { CampaignModel } from '../../ads/models/campaign.js';
+import { TransactionModel } from '../../transaction/models/transaction.model.js';
 
 // Create and save a new transaction
 export const createPlan = async (req, res) => {
@@ -24,7 +25,7 @@ export const createPlan = async (req, res) => {
 
     // Validate amount
     if (amount < 10000) {
-      return res.status(400).json({ error: 'Amount must be valid' });
+      return res.status(400).json({ error: 'Amount must be at least 10,000' });
     }
 
     // Validate currency and status with default options
@@ -44,7 +45,7 @@ export const createPlan = async (req, res) => {
     }
 
     // Create a new transaction record
-    const transaction = new PlanModel({
+    const plan = new PlanModel({
       partnerId,
       amount,
       currency: currency || 'NGN',
@@ -55,37 +56,20 @@ export const createPlan = async (req, res) => {
     });
 
     // Save transaction to the database
-    const savedTransaction = await transaction.save();
+    const savedPlan = await plan.save();
 
     // If the transaction is successful, update partner's balance
     if (status === 'success') {
       let repay = 0;
 
-      switch (amount) {
-        case 10000:
-          repay = 3000;
-
-          // start 1k ads
-          break;
-        case 30000:
-          repay = 10000;
-
-          // start 2k ads
-          break;
-        case 50000:
-          repay = 15000;
-
-          // start 5k ads
-          break;
-        case 100000:
-          repay = 30000;
-
-          // start 10k ads
-          break;
-        default:
-          repay = 0;
-          break;
-      }
+      // Map amounts to repay values for clarity and maintainability
+      const repayMapping = {
+        10000: 3000,
+        30000: 10000,
+        50000: 15000,
+        100000: 30000
+      };
+      repay = repayMapping[amount] || 0;
 
       const updatedPartner = await PartnersModel.findByIdAndUpdate(
         partnerId,
@@ -93,13 +77,17 @@ export const createPlan = async (req, res) => {
         { new: true }  // Return updated partner document
       );
 
+      if (!updatedPartner) {
+        return res.status(404).json({ error: 'Partner not found' });
+      }
+
       // Distribute compensations
       CalculateCompensationAndDistribute(amount);
 
-       // Send email to form owner
+      // Send email to form owner
       const ownerSubject = 'New MarketSpase Payment';
-      const ownerMessage = ownerEmailTemplate(transaction);
-      const ownerEmails = ['ago.fnc@gmail.com'];
+      const ownerMessage = ownerEmailTemplate(plan);
+      const ownerEmails = ['ago.fnc@gmail.com']; // Consider moving this to a config file
       await Promise.all(ownerEmails.map(email => sendEmail(email, ownerSubject, ownerMessage)));
 
       // Send welcome email to the user
@@ -107,49 +95,53 @@ export const createPlan = async (req, res) => {
       const userMessage = userEmailTemplate(updatedPartner);
       await sendEmail(updatedPartner.email, userSubject, userMessage);
 
-      res.status(200).json({
-        message: 'Transaction saved successfully!',
-        transaction: savedTransaction,
+      // Activate default ads
+      const now = new Date();  // Get the current date and time
+      const twoDaysLater = new Date(now);
+      twoDaysLater.setDate(now.getDate() + 12);  // Set the end date to 12 days later
+
+      const defaultAds = new CampaignModel({
+        targetAudience: { ageRangeTarget: 'All', genderTarget: 'All' },
+        marketingObjectives: { adObjective: 'Lead generation' },
+        budget: { budgetType: 'Daily budget', budgetAmount: 2000 },
+        adDuration: {
+          campaignStartDate: now.toISOString(),  // Use current date as start date
+          noEndDate: false,
+          campaignEndDate: twoDaysLater.toISOString()  // Use date 12 days later as end date
+        },
+        adFormat: { adFormat: 'Search engine', deviceType: 'All devices' },
+        createdBy: partnerId,
+        campaignName: 'Google',
+        deliveryStatus: 'Pending'
       });
 
-     // Activate default ads
-    // Create a default Ad for every partner on buying a plan
-    const now = new Date();  // Get the current date and time
-    const twoDaysLater = new Date(now);
-    twoDaysLater.setDate(now.getDate() + 12);  // Set the end date to 12 days later
+      // Save the Ad document to the database
+      await defaultAds.save();
 
-    const defaultAds = new CampaignModel({
-      targetAudience: { ageRangeTarget: 'All', genderTarget: 'All' },
-      marketingObjectives: { adObjective: 'Lead generation' },
-      budget: { budgetType: 'Daily budget', budgetAmount: 2000 },
-      adDuration: {
-        campaignStartDate: now.toISOString(),  // Use current date as start date
-        noEndDate: false,
-        campaignEndDate: twoDaysLater.toISOString()  // Use date 2 days later as end date
-      },
-      adFormat: { adFormat: 'Search engine', deviceType: 'All devices' },
-      createdBy: partnerId,
-      campaignName: 'Google',
-      deliveryStatus: 'Pending'
-    });
+      // Record the transaction  
+      const transaction = new TransactionModel({
+        partnerId: partnerId,
+        amount: amount,  // Use the budget amount as the charge
+        status: 'Completed',
+        paymentMethod: 'Plan purchase',
+        transactionType: 'Debit',
+        reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
+      });
+      await transaction.save();
 
-    // Save the Ad document to the database
-    await defaultAds.save();
-
-
-      if (!updatedPartner) {
-        return res.status(404).json({ error: 'Partner not found' });
-      }
+      res.status(200).json({
+        message: 'Transaction saved successfully!',
+        plan: savedPlan,
+      });
     }
-    
   } catch (error) {
     console.error('Error saving transaction:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-// Get all transactions for a specific partner
-export const getTransactionsByPartner = async (req, res) => {
+// Get all plans for a specific partner
+export const getPlansByPartner = async (req, res) => {
   try {
     const { partnerId } = req.params;
 
@@ -157,10 +149,11 @@ export const getTransactionsByPartner = async (req, res) => {
       return res.status(400).json({ error: 'Invalid partner ID format' });
     }
 
-    const transactions = await PlanModel.find({ partnerId }).sort({ date: -1 });
-    res.status(200).json(transactions);
+    const plans = await PlanModel.find({ partnerId }).sort({ date: -1 }); // Sort by date in descending order
+
+    res.status(200).json(plans);
   } catch (error) {
-    console.error('Error retrieving transactions:', error);
+    console.error('Error retrieving plans:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

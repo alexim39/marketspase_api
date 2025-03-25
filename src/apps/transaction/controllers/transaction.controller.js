@@ -65,7 +65,7 @@ export const withdrawRequest = async (req, res) => {
       amount: amount,
       status: "Pending",
       paymentMethod: "Withdrawal",
-      transactionType: "Debit",
+      transactionType: "Credit", // its credit when the user bank account is credite
       bankDetail: {
         bankCode: bank,
         accountNumber: accountNumber,
