@@ -98,7 +98,7 @@ export const createPlan = async (req, res) => {
       // Activate default ads
       const now = new Date();  // Get the current date and time
       const twoDaysLater = new Date(now);
-      twoDaysLater.setDate(now.getDate() + 12);  // Set the end date to 12 days later
+      twoDaysLater.setDate(now.getDate() + 14);  // Set the end date to 14 days later
 
       const defaultAds = new CampaignModel({
         targetAudience: { ageRangeTarget: 'All', genderTarget: 'All' },

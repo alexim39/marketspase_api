@@ -19,21 +19,7 @@ export const createFacebookAd = async (req, res) => {
       });
     }
 
-    // Check if the partner entered sufficient amount  
-    if (body.budget.budgetAmount < MIN_CHARGE) {
-      return res.status(402).json({
-        message: 'Insufficient amount for transaction',
-        data: null,
-      });
-    }
-
-    // Check if the partner has sufficient balance for the budget amount
-    if (partner.balance >= body.budget.budgetAmount) {
-      // Deduct the budget amount from the partner's balance  
-      partner.balance -= body.budget.budgetAmount;
-
-      // Save the updated partner balance  
-      await partner.save();
+    if (body.isCard) {
 
       // Record the transaction  
       const transaction = new TransactionModel({
@@ -61,11 +47,58 @@ export const createFacebookAd = async (req, res) => {
       });
 
     } else {
-      return res.status(401).json({
-        message: 'Insufficient balance for transaction',
-        data: null,
-      });
+
+      // Check if the partner entered sufficient amount  
+      if (body.budget.budgetAmount < MIN_CHARGE) {
+        return res.status(402).json({
+          message: 'Insufficient amount for transaction',
+          data: null,
+        });
+      }
+
+      // Check if the partner has sufficient balance for the budget amount
+      if (partner.balance >= body.budget.budgetAmount) {
+        // Deduct the budget amount from the partner's balance  
+        partner.balance -= body.budget.budgetAmount;
+
+        // Save the updated partner balance  
+        await partner.save();
+
+        // Record the transaction  
+        const transaction = new TransactionModel({
+          partnerId: partner._id,
+          amount: body.budget.budgetAmount,  // Use the budget amount as the charge
+          status: 'Completed',
+          paymentMethod: 'Facebook Ads',
+          transactionType: 'Debit',
+          reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
+        });
+
+        await transaction.save();
+
+
+        // Create a new Ad document using the data from the request body
+        const newAd = new CampaignModel(body);
+
+        // Save the Ad document to the database
+        await newAd.save();
+
+        res.status(201).json({
+          message: 'Ad campaign created successfully!',
+          data: newAd,
+          transaction: transaction
+        });
+
+      } else {
+        return res.status(401).json({
+          message: 'Insufficient balance for transaction',
+          data: null,
+        });
+      }
+
     }
+
+
 
   } catch (error) {
     console.error(error.message);
@@ -93,21 +126,7 @@ export const createGoogleAd = async (req, res) => {
         });
       }
 
-      // Check if the partner entered sufficient amount  
-      if (body.budget.budgetAmount < MIN_CHARGE) {
-        return res.status(402).json({
-          message: 'Insufficient amount for transaction',
-          data: null,
-        });
-      }
-
-      // Check if the partner has sufficient balance for the budget amount
-      if (partner.balance >= body.budget.budgetAmount) {
-        // Deduct the budget amount from the partner's balance  
-        partner.balance -= body.budget.budgetAmount;
-
-        // Save the updated partner balance  
-        await partner.save();
+      if (body.isCard) {
 
         // Record the transaction  
         const transaction = new TransactionModel({
@@ -122,7 +141,7 @@ export const createGoogleAd = async (req, res) => {
         await transaction.save();
 
         // Create a new Ad document using the data from the request body
-         const newAd = new CampaignModel(body);
+        const newAd = new CampaignModel(body);
 
         // Save the Ad document to the database
         await newAd.save();
@@ -134,10 +153,54 @@ export const createGoogleAd = async (req, res) => {
         });
 
       } else {
-        return res.status(401).json({
-          message: 'Insufficient balance for transaction',
-          data: null,
-        });
+
+        // Check if the partner entered sufficient amount  
+        if (body.budget.budgetAmount < MIN_CHARGE) {
+          return res.status(402).json({
+            message: 'Insufficient amount for transaction',
+            data: null,
+          });
+        }
+
+        // Check if the partner has sufficient balance for the budget amount
+        if (partner.balance >= body.budget.budgetAmount) {
+          // Deduct the budget amount from the partner's balance  
+          partner.balance -= body.budget.budgetAmount;
+
+          // Save the updated partner balance  
+          await partner.save();
+
+          // Record the transaction  
+          const transaction = new TransactionModel({
+            partnerId: partner._id,
+            amount: body.budget.budgetAmount,  // Use the budget amount as the charge
+            status: 'Completed',
+            paymentMethod: 'Google Ads',
+            transactionType: 'Debit',
+            reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
+          });
+
+          await transaction.save();
+
+          // Create a new Ad document using the data from the request body
+          const newAd = new CampaignModel(body);
+
+          // Save the Ad document to the database
+          await newAd.save();
+
+          res.status(201).json({
+              message: 'Ad campaign created successfully!',
+              data: newAd, // Include the saved Ad data in the response
+              transaction: transaction
+          });
+
+        } else {
+          return res.status(401).json({
+            message: 'Insufficient balance for transaction',
+            data: null,
+          });
+        }
+        
       }
 
     } catch (error) {
@@ -166,24 +229,10 @@ export const createYoutubeAd = async (req, res) => {
         });
       }
 
-      // Check if the partner entered sufficient amount  
-      if (body.budget.budgetAmount < MIN_CHARGE) {
-        return res.status(402).json({
-          message: 'Insufficient amount for transaction',
-          data: null,
-        });
-      }
+      if (body.isCard) {
 
-      // Check if the partner has sufficient balance for the budget amount
-      if (partner.balance >= body.budget.budgetAmount) {
-        // Deduct the budget amount from the partner's balance  
-        partner.balance -= body.budget.budgetAmount;
-
-        // Save the updated partner balance  
-        await partner.save();
-
-        // Record the transaction  
-        const transaction = new TransactionModel({
+         // Record the transaction  
+         const transaction = new TransactionModel({
           partnerId: partner._id,
           amount: body.budget.budgetAmount,  // Use the budget amount as the charge
           status: 'Completed',
@@ -195,7 +244,7 @@ export const createYoutubeAd = async (req, res) => {
         await transaction.save();
 
         // Create a new Ad document using the data from the request body
-         const newAd = new CampaignModel(body);
+        const newAd = new CampaignModel(body);
 
         // Save the Ad document to the database
         await newAd.save();
@@ -207,11 +256,56 @@ export const createYoutubeAd = async (req, res) => {
         });
 
       } else {
-        return res.status(401).json({
-          message: 'Insufficient balance for transaction',
-          data: null,
-        });
+
+        // Check if the partner entered sufficient amount  
+        if (body.budget.budgetAmount < MIN_CHARGE) {
+          return res.status(402).json({
+            message: 'Insufficient amount for transaction',
+            data: null,
+          });
+        }
+
+        // Check if the partner has sufficient balance for the budget amount
+        if (partner.balance >= body.budget.budgetAmount) {
+          // Deduct the budget amount from the partner's balance  
+          partner.balance -= body.budget.budgetAmount;
+
+          // Save the updated partner balance  
+          await partner.save();
+
+          // Record the transaction  
+          const transaction = new TransactionModel({
+            partnerId: partner._id,
+            amount: body.budget.budgetAmount,  // Use the budget amount as the charge
+            status: 'Completed',
+            paymentMethod: 'Youtube Ads',
+            transactionType: 'Debit',
+            reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
+          });
+
+          await transaction.save();
+
+          // Create a new Ad document using the data from the request body
+          const newAd = new CampaignModel(body);
+
+          // Save the Ad document to the database
+          await newAd.save();
+
+          res.status(201).json({
+              message: 'Ad campaign created successfully!',
+              data: newAd, // Include the saved Ad data in the response
+              transaction: transaction
+          });
+
+        } else {
+          return res.status(401).json({
+            message: 'Insufficient balance for transaction',
+            data: null,
+          });
+        }
+
       }
+
 
     } catch (error) {
         console.error(error.message);
@@ -239,51 +333,81 @@ export const createLinkedinAd = async (req, res) => {
         });
       }
 
-      // Check if the partner entered sufficient amount  
-      if (body.budget.budgetAmount < MIN_CHARGE) {
-        return res.status(402).json({
-          message: 'Insufficient amount for transaction',
-          data: null,
+      if (body.isCard) {
+
+         // Record the transaction  
+         const transaction = new TransactionModel({
+          partnerId: partner._id,
+          amount: body.budget.budgetAmount,  // Use the budget amount as the charge
+          status: 'Completed',
+          paymentMethod: 'LinkedIn Ads',
+          transactionType: 'Debit',
+          reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
         });
-      }
-
-      // Check if the partner has sufficient balance for the budget amount
-      if (partner.balance >= body.budget.budgetAmount) {
-      // Deduct the budget amount from the partner's balance  
-      partner.balance -= body.budget.budgetAmount;
-
-      // Save the updated partner balance  
-      await partner.save();
-
-      // Record the transaction  
-      const transaction = new TransactionModel({
-        partnerId: partner._id,
-        amount: body.budget.budgetAmount,  // Use the budget amount as the charge
-        status: 'Completed',
-        paymentMethod: 'LinkedIn Ads',
-        transactionType: 'Debit',
-        reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
-      });
-
-      await transaction.save();
-
-      // Create a new Ad document using the data from the request body
-      const newAd = new CampaignModel(body);
-
-      // Save the Ad document to the database
-      await newAd.save();
-
-      res.status(201).json({
-          message: 'Ad campaign created successfully!',
-          data: newAd, // Include the saved Ad data in the response
-          transaction: transaction
-      });
+  
+        await transaction.save();
+  
+        // Create a new Ad document using the data from the request body
+        const newAd = new CampaignModel(body);
+  
+        // Save the Ad document to the database
+        await newAd.save();
+  
+        res.status(201).json({
+            message: 'Ad campaign created successfully!',
+            data: newAd, // Include the saved Ad data in the response
+            transaction: transaction
+        });
 
       } else {
-        return res.status(401).json({
-          message: 'Insufficient balance for transaction',
-          data: null,
-        });
+
+         // Check if the partner entered sufficient amount  
+        if (body.budget.budgetAmount < MIN_CHARGE) {
+          return res.status(402).json({
+            message: 'Insufficient amount for transaction',
+            data: null,
+          });
+        }
+
+        // Check if the partner has sufficient balance for the budget amount
+        if (partner.balance >= body.budget.budgetAmount) {
+          // Deduct the budget amount from the partner's balance  
+          partner.balance -= body.budget.budgetAmount;
+    
+          // Save the updated partner balance  
+          await partner.save();
+    
+          // Record the transaction  
+          const transaction = new TransactionModel({
+            partnerId: partner._id,
+            amount: body.budget.budgetAmount,  // Use the budget amount as the charge
+            status: 'Completed',
+            paymentMethod: 'LinkedIn Ads',
+            transactionType: 'Debit',
+            reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
+          });
+    
+          await transaction.save();
+    
+          // Create a new Ad document using the data from the request body
+          const newAd = new CampaignModel(body);
+    
+          // Save the Ad document to the database
+          await newAd.save();
+    
+          res.status(201).json({
+              message: 'Ad campaign created successfully!',
+              data: newAd, // Include the saved Ad data in the response
+              transaction: transaction
+          });
+    
+          } else {
+            return res.status(401).json({
+              message: 'Insufficient balance for transaction',
+              data: null,
+            });
+          }
+
       }
 
     } catch (error) {
@@ -312,7 +436,35 @@ export const createTiktokAd = async (req, res) => {
         });
       }
 
-      // Check if the partner entered sufficient amount  
+      if (body.isCard) {
+
+         // Record the transaction  
+         const transaction = new TransactionModel({
+          partnerId: partner._id,
+          amount: body.budget.budgetAmount,  // Use the budget amount as the charge
+          status: 'Completed',
+          paymentMethod: 'Tiktok Ads',
+          transactionType: 'Debit',
+          reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
+        });
+
+        await transaction.save();
+
+        // Create a new Ad document using the data from the request body
+        const newAd = new CampaignModel(body);
+
+        // Save the Ad document to the database
+        await newAd.save();
+
+        res.status(201).json({
+            message: 'Ad campaign created successfully!',
+            data: newAd, // Include the saved Ad data in the response
+            transaction: transaction
+        });
+
+      } else {
+        
+         // Check if the partner entered sufficient amount  
       if (body.budget.budgetAmount < MIN_CHARGE) {
         return res.status(402).json({
           message: 'Insufficient amount for transaction',
@@ -320,44 +472,47 @@ export const createTiktokAd = async (req, res) => {
         });
       }
 
-      // Check if the partner has sufficient balance for the budget amount
-      if (partner.balance >= body.budget.budgetAmount) {
-      // Deduct the budget amount from the partner's balance  
-      partner.balance -= body.budget.budgetAmount;
+        // Check if the partner has sufficient balance for the budget amount
+        if (partner.balance >= body.budget.budgetAmount) {
+        // Deduct the budget amount from the partner's balance  
+        partner.balance -= body.budget.budgetAmount;
 
-      // Save the updated partner balance  
-      await partner.save();
+        // Save the updated partner balance  
+        await partner.save();
 
-      // Record the transaction  
-      const transaction = new TransactionModel({
-        partnerId: partner._id,
-        amount: body.budget.budgetAmount,  // Use the budget amount as the charge
-        status: 'Completed',
-        paymentMethod: 'Tiktok Ads',
-        transactionType: 'Debit',
-        reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
-      });
-
-      await transaction.save();
-
-      // Create a new Ad document using the data from the request body
-      const newAd = new CampaignModel(body);
-
-      // Save the Ad document to the database
-      await newAd.save();
-
-      res.status(201).json({
-          message: 'Ad campaign created successfully!',
-          data: newAd, // Include the saved Ad data in the response
-          transaction: transaction
-      });
-
-      } else {
-        return res.status(401).json({
-          message: 'Insufficient balance for transaction',
-          data: null,
+        // Record the transaction  
+        const transaction = new TransactionModel({
+          partnerId: partner._id,
+          amount: body.budget.budgetAmount,  // Use the budget amount as the charge
+          status: 'Completed',
+          paymentMethod: 'Tiktok Ads',
+          transactionType: 'Debit',
+          reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
         });
+
+        await transaction.save();
+
+        // Create a new Ad document using the data from the request body
+        const newAd = new CampaignModel(body);
+
+        // Save the Ad document to the database
+        await newAd.save();
+
+        res.status(201).json({
+            message: 'Ad campaign created successfully!',
+            data: newAd, // Include the saved Ad data in the response
+            transaction: transaction
+        });
+
+        } else {
+          return res.status(401).json({
+            message: 'Insufficient balance for transaction',
+            data: null,
+          });
+        }
       }
+
+     
 
     } catch (error) {
         console.error(error.message);
