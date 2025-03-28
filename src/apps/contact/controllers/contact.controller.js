@@ -42,12 +42,13 @@ export const ContactController = async (req, res) => {
         const receiverEmails = [contactObject.email, 'contacts@marketspase.com'];
         await Promise.all(receiverEmails.map(email => sendEmail(email, userSubject, userMessage)));
 
-        res.status(200).json(contactObject);
+        res.status(200).json({data: contactObject, success: true, message: "Contact form submitted successfully."});
 
     } catch (error) {
         console.error(error.message);
         res.status(500).json({
-            message: error.message
+            message: 'internal server error',
+            success: false,
         })
     }
 }

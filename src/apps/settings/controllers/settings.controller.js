@@ -10,7 +10,7 @@ export const toggleNotification = async (req, res) => {
 
     // Validate input
     if (!partnerId) {
-      return res.status(400).json({ message: 'Partner ID is required' });
+      return res.status(400).json({ success: false, message: 'Partner ID is required' });
     }
     if (typeof state !== 'boolean') {
       return res.status(400).json({ message: 'State must be a boolean' });
@@ -20,7 +20,7 @@ export const toggleNotification = async (req, res) => {
     const partner = await PartnersModel.findById(partnerId);
 
     if (!partner) {
-      return res.status(404).json({ message: 'Partner not found' });
+      return res.status(404).json({ success: false, message: 'Partner not found' });
     }
 
     // Update the notification setting
@@ -33,10 +33,11 @@ export const toggleNotification = async (req, res) => {
         partnerId: partner._id,
         notificationState: partner.notification,
       },
+      success: true,
     });
   } catch (error) {
     console.error('Error updating notification setting:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
@@ -47,17 +48,17 @@ export const toggleTheme = async (req, res) => {
 
     // Validate input
     if (!partnerId) {
-      return res.status(400).json({ message: 'Partner ID is required' });
+      return res.status(400).json({success: false,  message: 'Partner ID is required' });
     }
     if (typeof state !== 'boolean') {
-      return res.status(400).json({ message: 'State must be a boolean' });
+      return res.status(400).json({ success: false, message: 'State must be a boolean' });
     }
 
     // Find the partner by ID
     const partner = await PartnersModel.findById(partnerId);
 
     if (!partner) {
-      return res.status(404).json({ message: 'Partner not found' });
+      return res.status(400).json({ success: false, message: 'Partner not found' });
     }
 
     // Update the notification setting
@@ -70,10 +71,11 @@ export const toggleTheme = async (req, res) => {
         partnerId: partner._id,
         notificationState: partner.darkMode,
       },
+      success: true,
     });
   } catch (error) {
     console.error('Error updating notification setting:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
@@ -84,17 +86,17 @@ export const getThemeSetting = async (req, res) => {
     const partner = await PartnersModel.findOne({ _id: partnerId }); // Corrected to _id
 
     if (!partner) {
-      return res.status(404).json({ message: 'Partner not found' });
+      return res.status(404).json({ success: false, message: 'Partner not found' });
     }
 
     // get theme state from partner object
     const darkMode = partner.darkMode;
 
-    res.status(200).json({ darkMode });
+    res.status(200).json({ success: true, darkMode });
 
   } catch (error) {
     console.error('Error updating notification setting:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
@@ -104,18 +106,18 @@ export const setIncomeTarget = async (req, res) => {
 
     // Validate required fields
     if (!partnerId || targetAmount === undefined || !period) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 
     // Validate targetAmount
     if (targetAmount < 1000) {
-      return res.status(400).json({ error: 'Target amount must be above 1000' });
+      return res.status(400).json({ success: false, message: 'Target amount must be above 1000' });
     }
 
     // Validate period
     const allowedPeriods = ['daily', 'weekly', 'monthly', 'yearly'];
     if (!allowedPeriods.includes(period.toLowerCase())) {
-      return res.status(400).json({ error: 'Invalid period. Allowed values are daily, weekly, monthly, or yearly' });
+      return res.status(400).json({ success: false, message: 'Invalid period. Allowed values are daily, weekly, monthly, or yearly' });
     }
 
     // Update the incomeTarget for the partner
@@ -131,15 +133,16 @@ export const setIncomeTarget = async (req, res) => {
     );
 
     if (!updatedPartner) {
-      return res.status(404).json({ error: 'Partner not found' });
+      return res.status(404).json({ success: false, message: 'Partner not found' });
     }
 
     res.status(200).json({
       message: 'Income target updated successfully',
       partner: updatedPartner,
+      success: true,
     });
   } catch (error) {
     console.error('Error updating income target:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };

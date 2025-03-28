@@ -11,7 +11,6 @@ export const userAccountActivationEmailTemplate = (partner) => {
       </header>
 
       <main style="padding: 20px;">
-        <h6>Account Activation Request</h6>
 
         <p>Hi <strong>${formattedName}</strong>,</p>
 
@@ -21,7 +20,7 @@ export const userAccountActivationEmailTemplate = (partner) => {
 
         <br>
         <div style="text-align: center;">
-          <a href="https://platform.marketspase.com/partners/activation/${partner._id}" style="padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; text-align: center; margin: 1em 0;">
+          <a href="https://platform.marketspase.com/auth/activation/${partner._id}" style="padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; text-align: center; margin: 1em 0;">
             Activate Account
           </a>
         </div>

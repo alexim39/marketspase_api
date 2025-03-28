@@ -23,18 +23,18 @@ export const prospectSurveyFormHandler = async (req, res) => {
     // Check if email already exists
     const existingSurvey = await ProspectSurveyModel.findOne({ email: surveyData.email });
     if (existingSurvey) {
-      return res.status(400).json({ message: 'Email address already exists', user: existingSurvey });
+      return res.status(400).json({ success: false, message: 'Email address already exists', user: existingSurvey });
     }
 
     // Save the survey data to MongoDB
     const survey = new ProspectSurveyModel(surveyData);
     await survey.save();
 
-    res.status(201).json(survey); // 201 Created
+    res.status(200).json({success: false, data: survey}); // 200 Created
 
   } catch (error) {
     console.error('Error handling prospect survey form:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
 
@@ -58,7 +58,7 @@ export const prospectSignUpFormHandler = async (req, res) => {
 
         // Input Validation: Check if required fields are present and valid
         if (!signUpData.email || !signUpData.password || !signUpData.confirmPassword) {
-            return res.status(400).json({ message: "Missing required fields" });
+            return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 
         // Check if prospect already exists as a partner (case-insensitive)
@@ -67,12 +67,12 @@ export const prospectSignUpFormHandler = async (req, res) => {
         }).collation({ locale: "en", strength: 2 });
 
         if (existingPartner) {
-            return res.status(409).json({ message: "Prospect already exists as a partner" }); // Use 409 Conflict
+            return res.status(400).json({ success: false, message: "Prospect already exists as a partner" }); // Use 409 Conflict
         }
 
         // Validate that password and confirmPassword match
         if (signUpData.password !== signUpData.confirmPassword) {
-            return res.status(400).json({ message: "Passwords do not match" }); // Use 400 Bad Request
+            return res.status(400).json({ success: false, message: "Passwords do not match" }); // Use 400 Bad Request
         }
 
         // Find the prospect's survey record (case-insensitive)
@@ -81,11 +81,13 @@ export const prospectSignUpFormHandler = async (req, res) => {
         }).collation({ locale: "en", strength: 2 });
 
         if (!surveyRecord) {
-            return res.status(404).json({ message: "Prospect survey record not found" }); // Use 404 Not Found
+            return res.status(404).json({ success: false, message: "Prospect survey record not found" }); // Use 404 Not Found
         }
 
         // Hash the password
-        const hashedPassword = await bcrypt.hash(signUpData.password, 10);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(signUpData.password, salt);
+        //const hashedPassword = await bcrypt.hash(signUpData.password, 10);
 
         // Generate a unique username
         const username = await generateUniqueUsername(surveyRecord.name, surveyRecord.surname);
@@ -115,10 +117,10 @@ export const prospectSignUpFormHandler = async (req, res) => {
 
         // Exclude password from the response
         const { password: _, ...userObject } = newPartner.toJSON();
-        res.status(201).json(userObject); // Use 201 Created for successful resource creation
+        res.status(200).json({success: false, user: userObject}); // Use 200 Created for successful resource creation
 
     } catch (error) {
         console.error('Error handling prospect signup:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };

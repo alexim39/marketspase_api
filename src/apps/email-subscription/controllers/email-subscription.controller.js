@@ -27,12 +27,13 @@ export const emailSubscription = async (req, res) => {
             await sendEmail(email, emailSubject, emailMessage);
         }
 
-        res.status(200).json(emailSubscription);
+        res.status(200).json({success: true, data: emailSubscription});
 
     } catch (error) {
         console.error(error.message);
         res.status(500).json({
-            message: error.message
+            message: 'internal server error',
+            success: false,
         })
     }
 }

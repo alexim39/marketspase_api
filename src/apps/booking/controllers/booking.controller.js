@@ -35,11 +35,12 @@ export const bookingForm = async (req, res) => {
     const userMessage = userNotificationEmailTemplate(userBooking);
     await sendEmail(userBooking.email, userSubject, userMessage);
 
-    res.status(200).json(userBooking);
+    res.status(200).json({data: userBooking, success: true, message: "Booking form submitted successfully."});
   } catch (error) {
     console.error(error.message);
     res.status(500).json({
-      message: error.message,
+      message: 'Internal server error',
+      success: false,
     });
   }
 };

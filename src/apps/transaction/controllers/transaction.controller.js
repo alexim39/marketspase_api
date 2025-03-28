@@ -17,12 +17,13 @@ export const getTransactions = async (req, res) => {
     res.status(200).json({
       message: "Transaction retrieved successfully!",
       data: transac,
+      success: true,
     });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({
       message: "Error retrieving transactions",
-      error: error.message,
+      success: false,
     });
   }
 };
@@ -39,16 +40,15 @@ export const withdrawRequest = async (req, res) => {
     if (!partner) {
       return res.status(400).json({
         message: "Partner not found",
-        data: null,
+        success: false,
       });
     }
 
     // Check if the partner has sufficient balance
     if (partner.balance < amount) {
-      return res.status(401).json({
-        code: 401,
+      return res.status(400).json({
         message: "Insufficient balance for transaction",
-        data: null,
+        success: false,
       });
     }
 
@@ -99,6 +99,7 @@ export const withdrawRequest = async (req, res) => {
       return res.status(200).json({
         message: "Withdrawal successful, payment has been processed.",
         data: transaction,
+        success: true,
       });
     } else {
       // If payment fails, refund balance and update transaction status
@@ -116,13 +117,14 @@ export const withdrawRequest = async (req, res) => {
       return res.status(500).json({
         message: "Payment failed. Your balance has been refunded.",
         data: transaction,
+        success: false,
       });
     }
   } catch (error) {
     console.error(error.message);
     res.status(500).json({
       message: "An error occurred while processing the withdrawal.",
-      error: error.message,
+      success: false,
     });
   }
 };

@@ -15,17 +15,17 @@ export const createPlan = async (req, res) => {
 
     // Validate required fields
     if (!partnerId || !amount || !reference) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 
     // Validate partnerId format
     if (!mongoose.Types.ObjectId.isValid(partnerId)) {
-      return res.status(400).json({ error: 'Invalid partner ID format' });
+      return res.status(400).json({ success: false, message: 'Invalid partner ID format' });
     }
 
     // Validate amount
     if (amount < 10000) {
-      return res.status(400).json({ error: 'Amount must be at least 10,000' });
+      return res.status(400).json({ success: false, message: 'Amount must be at least 10,000' });
     }
 
     // Validate currency and status with default options
@@ -35,13 +35,13 @@ export const createPlan = async (req, res) => {
       return res.status(400).json({ error: 'Invalid currency option' });
     }
     if (status && !allowedStatuses.includes(status)) {
-      return res.status(400).json({ error: 'Invalid status option' });
+      return res.status(400).json({ success: false, message: 'Invalid status option' });
     }
 
     // Check if the transaction reference already exists
     const existingTransaction = await PlanModel.findOne({ reference });
     if (existingTransaction) {
-      return res.status(409).json({ error: 'Transaction reference already exists' });
+      return res.status(409).json({ success: false, message: 'Transaction reference already exists' });
     }
 
     // Create a new transaction record
@@ -78,7 +78,7 @@ export const createPlan = async (req, res) => {
       );
 
       if (!updatedPartner) {
-        return res.status(404).json({ error: 'Partner not found' });
+        return res.status(404).json({ success: false, message: 'Partner not found' });
       }
 
       // Distribute compensations
@@ -100,6 +100,7 @@ export const createPlan = async (req, res) => {
       const twoDaysLater = new Date(now);
       twoDaysLater.setDate(now.getDate() + 14);  // Set the end date to 14 days later
 
+      // Activate default ads for the partner
       const defaultAds = new CampaignModel({
         targetAudience: { ageRangeTarget: 'All', genderTarget: 'All' },
         marketingObjectives: { adObjective: 'Lead generation' },
@@ -132,11 +133,12 @@ export const createPlan = async (req, res) => {
       res.status(200).json({
         message: 'Transaction saved successfully!',
         plan: savedPlan,
+        success: true,
       });
     }
   } catch (error) {
     console.error('Error saving transaction:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
@@ -146,14 +148,14 @@ export const getPlansByPartner = async (req, res) => {
     const { partnerId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(partnerId)) {
-      return res.status(400).json({ error: 'Invalid partner ID format' });
+      return res.status(400).json({ success: false, message: 'Invalid partner ID format' });
     }
 
     const plans = await PlanModel.find({ partnerId }).sort({ date: -1 }); // Sort by date in descending order
 
-    res.status(200).json(plans);
+    res.status(200).json({success: true, plans});
   } catch (error) {
     console.error('Error retrieving plans:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };

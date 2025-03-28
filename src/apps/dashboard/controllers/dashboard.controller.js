@@ -22,10 +22,11 @@ export const getPlansCount = async (req, res) => {
       res.status(200).json({
         count,
         total,
+        success: true,
       });
     } catch (error) {
       console.error('Error retrieving plans:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
 
@@ -42,7 +43,7 @@ export const getPartnerProfit = async (req, res) => {
   
       // Validate partnerId
       if (!mongoose.Types.ObjectId.isValid(partnerId)) {
-        return res.status(400).json({ error: 'Invalid partner ID format' });
+        return res.status(400).json({success: false, message: 'Invalid partner ID format' });
       }
   
       // Validate and parse date range
@@ -50,7 +51,7 @@ export const getPartnerProfit = async (req, res) => {
       const end = endDate ? new Date(endDate) : new Date(); // Default to the current date
   
       if (start > end) {
-        return res.status(400).json({ error: 'Start date must be earlier than end date' });
+        return res.status(400).json({ success: false, message: 'Start date must be earlier than end date' });
       }
   
       // Aggregate profit from successful plans within the date range
@@ -93,10 +94,11 @@ export const getPartnerProfit = async (req, res) => {
       res.status(200).json({
         range: profitInRange,
         total: totalProfit,
+        success: true,
       });
     } catch (error) {
       console.error('Error retrieving partner profit:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
 
@@ -114,7 +116,7 @@ export const getPartnerExpenses = async (req, res) => {
 
     // Validate partnerId
     if (!mongoose.Types.ObjectId.isValid(partnerId)) {
-      return res.status(400).json({ error: 'Invalid partner ID format' });
+      return res.status(400).json({ success: false, message: 'Invalid partner ID format' });
     }
 
     // Validate and parse date range
@@ -122,7 +124,7 @@ export const getPartnerExpenses = async (req, res) => {
     const end = endDate ? new Date(endDate) : new Date(); // Default to the current date
 
     if (start > end) {
-      return res.status(400).json({ error: 'Start date must be earlier than end date' });
+      return res.status(400).json({ success: false, message: 'Start date must be earlier than end date' });
     }
     // Aggregate expenses for the specified month
     const monthlyResult = await TransactionModel.aggregate([
@@ -165,10 +167,11 @@ export const getPartnerExpenses = async (req, res) => {
       message: 'Expenses retrieved successfully.',
       range: monthlyExpense,
       total: totalExpense,
+      success: true,
     });
   } catch (error) {
     console.error('Error retrieving partner expenses:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
@@ -180,7 +183,7 @@ export const calculatePartnerIncome = async (req, res) => {
     // 1. Get the partner
     const partner = await PartnersModel.findById(partnerId);
     if (!partner) {
-      return res.status(400).json({ error: 'Invalid partner ID format' });
+      return res.status(400).json({ success: false, message: 'Invalid partner ID format' });
     }
 
     // 2. Get the partner Period directly.
@@ -236,10 +239,11 @@ export const calculatePartnerIncome = async (req, res) => {
     }
 
     res.status(200).json({
-      totalIncome
+      totalIncome,
+      success: true,
     });
   } catch (error) {
     console.error('Error retrieving partner expenses:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 }

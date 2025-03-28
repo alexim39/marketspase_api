@@ -89,6 +89,14 @@ const partnersSchema = mongoose.Schema(
         default: "monthly",
       },
     },
+    resetToken: { // Add resetToken field
+      type: String,
+      default: undefined,
+    },
+    resetTokenExpiry: { // add resetTokenExpiry field
+      type: Date,
+      default: undefined,
+    }
   },
 
   {

@@ -15,7 +15,7 @@ export const createFacebookAd = async (req, res) => {
     if (!partner) {
       return res.status(400).json({
         message: 'Partner not found',
-        data: null,
+        success: false,
       });
     }
 
@@ -33,17 +33,17 @@ export const createFacebookAd = async (req, res) => {
 
       await transaction.save();
 
-
       // Create a new Ad document using the data from the request body
       const newAd = new CampaignModel(body);
 
       // Save the Ad document to the database
       await newAd.save();
 
-      res.status(201).json({
+      res.status(200).json({
         message: 'Ad campaign created successfully!',
         data: newAd,
-        transaction: transaction
+        transaction: transaction,
+        success: true,
       });
 
     } else {
@@ -52,7 +52,7 @@ export const createFacebookAd = async (req, res) => {
       if (body.budget.budgetAmount < MIN_CHARGE) {
         return res.status(402).json({
           message: 'Insufficient amount for transaction',
-          data: null,
+          success: false,
         });
       }
 
@@ -76,34 +76,33 @@ export const createFacebookAd = async (req, res) => {
 
         await transaction.save();
 
-
         // Create a new Ad document using the data from the request body
         const newAd = new CampaignModel(body);
 
         // Save the Ad document to the database
         await newAd.save();
 
-        res.status(201).json({
+        res.status(200).json({
           message: 'Ad campaign created successfully!',
           data: newAd,
-          transaction: transaction
+          transaction: transaction,
+          success: true,
         });
 
       } else {
         return res.status(401).json({
           message: 'Insufficient balance for transaction',
-          data: null,
+          success: false,
         });
       }
 
     }
 
-
-
   } catch (error) {
     console.error(error.message);
     res.status(500).json({
-      message: error.message
+      message: 'Internal server error', 
+      success: false,
     });
   }
 }
@@ -122,7 +121,7 @@ export const createGoogleAd = async (req, res) => {
       if (!partner) {
         return res.status(400).json({
           message: 'Partner not found',
-          data: null,
+          success: false,
         });
       }
 
@@ -146,10 +145,11 @@ export const createGoogleAd = async (req, res) => {
         // Save the Ad document to the database
         await newAd.save();
 
-        res.status(201).json({
+        res.status(200).json({
             message: 'Ad campaign created successfully!',
             data: newAd, // Include the saved Ad data in the response
-            transaction: transaction
+            transaction: transaction,
+            success: true,
         });
 
       } else {
@@ -158,7 +158,7 @@ export const createGoogleAd = async (req, res) => {
         if (body.budget.budgetAmount < MIN_CHARGE) {
           return res.status(402).json({
             message: 'Insufficient amount for transaction',
-            data: null,
+            success: false,
           });
         }
 
@@ -191,13 +191,14 @@ export const createGoogleAd = async (req, res) => {
           res.status(201).json({
               message: 'Ad campaign created successfully!',
               data: newAd, // Include the saved Ad data in the response
-              transaction: transaction
+              transaction: transaction,
+              success: true,
           });
 
         } else {
           return res.status(401).json({
             message: 'Insufficient balance for transaction',
-            data: null,
+            success: false,
           });
         }
         
@@ -206,7 +207,8 @@ export const createGoogleAd = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         res.status(500).json({
-            message: error.message
+            message: 'Internal server error',
+            success: false,
         })
     }
 }
@@ -225,7 +227,7 @@ export const createYoutubeAd = async (req, res) => {
       if (!partner) {
         return res.status(400).json({
           message: 'Partner not found',
-          data: null,
+          success: false,
         });
       }
 
@@ -249,10 +251,11 @@ export const createYoutubeAd = async (req, res) => {
         // Save the Ad document to the database
         await newAd.save();
 
-        res.status(201).json({
+        res.status(200).json({
             message: 'Ad campaign created successfully!',
             data: newAd, // Include the saved Ad data in the response
-            transaction: transaction
+            transaction: transaction,
+            success: true,
         });
 
       } else {
@@ -261,7 +264,7 @@ export const createYoutubeAd = async (req, res) => {
         if (body.budget.budgetAmount < MIN_CHARGE) {
           return res.status(402).json({
             message: 'Insufficient amount for transaction',
-            data: null,
+            success: false,
           });
         }
 
@@ -294,13 +297,14 @@ export const createYoutubeAd = async (req, res) => {
           res.status(201).json({
               message: 'Ad campaign created successfully!',
               data: newAd, // Include the saved Ad data in the response
-              transaction: transaction
+              transaction: transaction,
+              success: true,
           });
 
         } else {
           return res.status(401).json({
             message: 'Insufficient balance for transaction',
-            data: null,
+            success: false,
           });
         }
 
@@ -310,7 +314,8 @@ export const createYoutubeAd = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         res.status(500).json({
-            message: error.message
+            message: 'Internal server error',
+            success: false,
         })
     }
 }
@@ -329,7 +334,7 @@ export const createLinkedinAd = async (req, res) => {
       if (!partner) {
         return res.status(400).json({
           message: 'Partner not found',
-          data: null,
+          success: false,
         });
       }
 
@@ -353,10 +358,11 @@ export const createLinkedinAd = async (req, res) => {
         // Save the Ad document to the database
         await newAd.save();
   
-        res.status(201).json({
+        res.status(200).json({
             message: 'Ad campaign created successfully!',
             data: newAd, // Include the saved Ad data in the response
-            transaction: transaction
+            transaction: transaction,
+            success: true,
         });
 
       } else {
@@ -365,7 +371,7 @@ export const createLinkedinAd = async (req, res) => {
         if (body.budget.budgetAmount < MIN_CHARGE) {
           return res.status(402).json({
             message: 'Insufficient amount for transaction',
-            data: null,
+            success: false,
           });
         }
 
@@ -398,13 +404,14 @@ export const createLinkedinAd = async (req, res) => {
           res.status(201).json({
               message: 'Ad campaign created successfully!',
               data: newAd, // Include the saved Ad data in the response
-              transaction: transaction
+              transaction: transaction,
+              success: true,
           });
     
           } else {
             return res.status(401).json({
               message: 'Insufficient balance for transaction',
-              data: null,
+              success: false,
             });
           }
 
@@ -413,7 +420,8 @@ export const createLinkedinAd = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         res.status(500).json({
-            message: error.message
+            message: 'Internal server error',
+            success: false,
         })
     }
 }
@@ -432,7 +440,7 @@ export const createTiktokAd = async (req, res) => {
       if (!partner) {
         return res.status(400).json({
           message: 'Partner not found',
-          data: null,
+          success: false,
         });
       }
 
@@ -459,7 +467,8 @@ export const createTiktokAd = async (req, res) => {
         res.status(201).json({
             message: 'Ad campaign created successfully!',
             data: newAd, // Include the saved Ad data in the response
-            transaction: transaction
+            transaction: transaction,
+            success: true,
         });
 
       } else {
@@ -468,56 +477,55 @@ export const createTiktokAd = async (req, res) => {
       if (body.budget.budgetAmount < MIN_CHARGE) {
         return res.status(402).json({
           message: 'Insufficient amount for transaction',
-          data: null,
+          success: false,
         });
       }
 
         // Check if the partner has sufficient balance for the budget amount
         if (partner.balance >= body.budget.budgetAmount) {
-        // Deduct the budget amount from the partner's balance  
-        partner.balance -= body.budget.budgetAmount;
+          // Deduct the budget amount from the partner's balance  
+          partner.balance -= body.budget.budgetAmount;
 
-        // Save the updated partner balance  
-        await partner.save();
+          // Save the updated partner balance  
+          await partner.save();
 
-        // Record the transaction  
-        const transaction = new TransactionModel({
-          partnerId: partner._id,
-          amount: body.budget.budgetAmount,  // Use the budget amount as the charge
-          status: 'Completed',
-          paymentMethod: 'Tiktok Ads',
-          transactionType: 'Debit',
-          reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
-        });
+          // Record the transaction  
+          const transaction = new TransactionModel({
+            partnerId: partner._id,
+            amount: body.budget.budgetAmount,  // Use the budget amount as the charge
+            status: 'Completed',
+            paymentMethod: 'Tiktok Ads',
+            transactionType: 'Debit',
+            reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
+          });
 
-        await transaction.save();
+          await transaction.save();
 
-        // Create a new Ad document using the data from the request body
-        const newAd = new CampaignModel(body);
+          // Create a new Ad document using the data from the request body
+          const newAd = new CampaignModel(body);
 
-        // Save the Ad document to the database
-        await newAd.save();
+          // Save the Ad document to the database
+          await newAd.save();
 
-        res.status(201).json({
-            message: 'Ad campaign created successfully!',
-            data: newAd, // Include the saved Ad data in the response
-            transaction: transaction
-        });
+          res.status(201).json({
+              message: 'Ad campaign created successfully!',
+              data: newAd, // Include the saved Ad data in the response
+              transaction: transaction,
+              success: true,
+          });
 
         } else {
           return res.status(401).json({
             message: 'Insufficient balance for transaction',
-            data: null,
+            success: false,
           });
         }
       }
-
-     
-
     } catch (error) {
         console.error(error.message);
         res.status(500).json({
-            message: error.message
+            message: 'Internal server error',
+            success: false,
         })
     }
 }
@@ -534,12 +542,13 @@ export const getAds = async (req, res) => {
       res.status(200).json({
           message: 'Ads retrieved successfully!',
           data: ads,
+          success: true,
       });
   } catch (error) {
       console.error(error.message);
       res.status(500).json({
           message: 'Error retrieving Ads',
-          error: error.message,
+          success: false,
       });
   }
 };
@@ -557,23 +566,24 @@ export const getAd = async (req, res) => {
 
       if (!campaign) {
           return res.status(404).json({
-              message: 'Campaign not found',
+            success: false,
+            message: 'Campaign not found',
           });
       }
 
       res.status(200).json({
           message: 'Campaign retrieved successfully!',
           data: campaign,
+          success: true,
       });
   } catch (error) {
       console.error(error.message);
       res.status(500).json({
           message: 'Error retrieving the campaign',
-          error: error.message,
+          success: false,
       });
   }
 };
-
 
 
 // Controller Function (deleteAd)
@@ -584,19 +594,14 @@ export const deleteAd = async (req, res) => {
       const ad = await CampaignModel.findById(id);
 
       if (!ad) {
-          return res.status(404).json({ message: 'Ad not found' });
+          return res.status(404).json({ success: false, message: 'Ad not found' });
       }
-
-      // Option 1: Soft delete (recommended)
-      //ad.isActive = false;
-      //await ad.save();
-
       // Option 2: Hard delete (if you really want to remove the document)
       await CampaignModel.findByIdAndDelete(id);
 
-      res.status(200).json({ message: 'Ad deleted successfully' });
+      res.status(200).json({ success: true, message: 'Ad deleted successfully' });
   } catch (error) {
       console.error(error.message);
-      res.status(500).json({ message: 'Error deleting ad', error: error.message });
+      res.status(500).json({ message: 'Error deleting ad', success: false, });
   }
 };
