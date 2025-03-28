@@ -5,6 +5,7 @@ import { userNotificationEmailTemplate } from "../services/email/userTemplate.js
 import { PlanModel } from "../../plan/models/plan.model.js";
 import mongoose from "mongoose";
 import { TransactionModel } from '../../transaction/models/transaction.model.js';
+import { CampaignModel } from '../../ads/models/campaign.js';
 
 // Function to get the total number of plans by partnerId and the total number of all plans
 export const getPlansCount = async (req, res) => {
@@ -170,3 +171,75 @@ export const getPartnerExpenses = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
+export const calculatePartnerIncome = async (req, res) => {
+  try {
+    const { partnerId } = req.params;
+
+    // 1. Get the partner
+    const partner = await PartnersModel.findById(partnerId);
+    if (!partner) {
+      return res.status(400).json({ error: 'Invalid partner ID format' });
+    }
+
+    // 2. Get the partner Period directly.
+    const period = partner.incomeTarget.period;
+
+    let startDate, endDate;
+    const now = new Date();
+
+    // 3. Determine the date range based on the period
+    switch (period.toLowerCase()) {
+      case 'daily':
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        break;
+      case 'weekly':
+        const startOfWeek = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate() - now.getDay()
+        );
+        startDate = new Date(startOfWeek);
+        endDate = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate() - now.getDay() + 7
+        );
+        break;
+      case 'monthly':
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        break;
+      case 'yearly':
+        startDate = new Date(now.getFullYear(), 0, 1);
+        endDate = new Date(now.getFullYear() + 1, 0, 1);
+        break;
+      default:
+        throw new Error('Invalid period');
+    }
+
+    // 4. Find campaigns created by the partner within the period
+    const campaigns = await CampaignModel.find({
+      createdBy: partnerId,
+      createdAt: { $gte: startDate, $lt: endDate }, // Assuming 'createdAt' stores campaign creation date
+    });
+
+    // 5. Calculate total income from campaigns
+    let totalIncome = 0;
+    for (const campaign of campaigns) {
+      // Example: Assuming income is 10% of the budget
+      totalIncome += campaign.budget.budgetAmount * 0.1;
+
+      // You'll need to adjust this calculation based on your actual income logic.
+    }
+
+    res.status(200).json({
+      totalIncome
+    });
+  } catch (error) {
+    console.error('Error retrieving partner expenses:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}

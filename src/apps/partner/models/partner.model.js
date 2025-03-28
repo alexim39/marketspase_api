@@ -27,7 +27,7 @@ const partnersSchema = mongoose.Schema(
     },
     phone: {
       type: String,
-      //unique: true,
+      unique: true,
       //required: [true, "Please enter phone number"]
     },
     password: {
@@ -82,13 +82,11 @@ const partnersSchema = mongoose.Schema(
     incomeTarget: {
       targetAmount: { 
         type: Number, 
-        default: 1000,
-        required: [true, "Please enter target amount"]
+        default: 10000,
       },
       period: { 
         type: String,
         default: "monthly",
-        required: [true, "Please enter period"]
       },
     },
   },
