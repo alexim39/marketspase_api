@@ -5,6 +5,10 @@ import { sendEmail } from "../../../services/emailService.js";
 import crypto from 'crypto';
 import jwt from "jsonwebtoken";
 import { userAccountActivationEmailTemplate } from "../services/email/userActivationTemplate.js";
+import dotenv  from "dotenv"
+dotenv.config()
+
+
 
 // Partner login
 export const signin = async (req, res) => {
@@ -13,7 +17,7 @@ export const signin = async (req, res) => {
   const user = await PartnersModel.findOne({ email });
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.status(400).json({ success: false, message: "Invalid email or password" });
+    return res.status(400).json({ success: false, message: "Wrong email or password" });
   }
 
   const token = jwt.sign({ id: user._id }, process.env.JWTTOKENSECRET, {
@@ -31,23 +35,46 @@ export const signin = async (req, res) => {
 };
 
 // Logout
-export const signout = (req, res) => {
+export const signout = async (req, res) => {
   res.cookie("jwt", "", { maxAge: 0 });
   res.json({ success: true, message: "Logged out successfully" });
 };
 
 // Get partner details
+// Get partner details (modified to handle GET request with JWT)
 export const getPartner = async (req, res) => {
-  const token = req.cookies["jwt"];
-  const claims = jwt.verify(token, process.env.JWTTOKENSECRET);
+  try {
+    const token = req.cookies["jwt"];
+    
+    if (!token) {
+      return res.status(401).json({ success: false, message: "User unauthenticated: JWT missing" });
+    }
 
-  if (!claims) {
-    return res.status(401).json({ success: false, message: "User unauthenticated" });
+    const claims = jwt.verify(token, process.env.JWTTOKENSECRET);
+
+    if (!claims) {
+      return res.status(401).json({ success: false, message: "User unauthenticated: JWT invalid" });
+    }
+
+    const user = await PartnersModel.findById(claims.id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const { password: _, ...userObject } = user.toJSON(); // Remove password from response
+
+    res.status(200).json({success: true,  user: userObject});
+    
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ success: false, message: "User unauthenticated: JWT expired" });
+    } else if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ success: false, message: "User unauthenticated: Invalid JWT" });
+    }
+    console.error("Error getting partner:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
-
-  const user = await PartnersModel.findById(claims.id);
-  const { password: _, ...userObject } = user.toJSON();
-  res.status(200).json({success: true, user: userObject});
 };
 
 // Send email to user for account activation

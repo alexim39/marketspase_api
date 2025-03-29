@@ -27,7 +27,7 @@ const partnersSchema = mongoose.Schema(
     },
     phone: {
       type: String,
-      unique: true,
+      //unique: true,
       //required: [true, "Please enter phone number"]
     },
     password: {

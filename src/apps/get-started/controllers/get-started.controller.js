@@ -94,11 +94,11 @@ export const prospectSignUpFormHandler = async (req, res) => {
 
         // Create a new partner
         const newPartner = new PartnersModel({
-            name: surveyRecord.name,
-            surname: surveyRecord.surname,
-            email: surveyRecord.email,
+            name: surveyRecord.name.trim(),
+            surname: surveyRecord.surname.trim(),
+            email: surveyRecord.email.trim(),
             password: hashedPassword,
-            partnerOf: surveyRecord.referer,
+            partnerOf: surveyRecord.referer.trim(),
             username
         });
 
