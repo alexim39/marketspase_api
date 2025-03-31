@@ -25,8 +25,9 @@ export const createFacebookAd = async (req, res) => {
       const transaction = new TransactionModel({
         partnerId: partner._id,
         amount: body.budget.budgetAmount,  // Use the budget amount as the charge
-        status: 'Completed',
-        paymentMethod: 'Facebook Ads',
+        status: req.body.paymentGateway.status,
+        paymentMethod: 'Paystack',
+        purpose: 'Facebook Ads',
         transactionType: 'Debit',
         reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
       });
@@ -69,7 +70,8 @@ export const createFacebookAd = async (req, res) => {
           partnerId: partner._id,
           amount: body.budget.budgetAmount,  // Use the budget amount as the charge
           status: 'Completed',
-          paymentMethod: 'Facebook Ads',
+          purpose: 'Facebook Ads',
+          paymentMethod: 'Account Balance',
           transactionType: 'Debit',
           reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
         });
@@ -131,8 +133,9 @@ export const createGoogleAd = async (req, res) => {
         const transaction = new TransactionModel({
           partnerId: partner._id,
           amount: body.budget.budgetAmount,  // Use the budget amount as the charge
-          status: 'Completed',
-          paymentMethod: 'Google Ads',
+          status: req.body.paymentGateway.status,
+          purpose: 'Google Ads',
+          paymentMethod: 'Paystack',
           transactionType: 'Debit',
           reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
         });
@@ -146,10 +149,10 @@ export const createGoogleAd = async (req, res) => {
         await newAd.save();
 
         res.status(200).json({
-            message: 'Ad campaign created successfully!',
-            data: newAd, // Include the saved Ad data in the response
-            transaction: transaction,
-            success: true,
+          message: 'Ad campaign created successfully!',
+          data: newAd, // Include the saved Ad data in the response
+          transaction: transaction,
+          success: true,
         });
 
       } else {
@@ -175,7 +178,8 @@ export const createGoogleAd = async (req, res) => {
             partnerId: partner._id,
             amount: body.budget.budgetAmount,  // Use the budget amount as the charge
             status: 'Completed',
-            paymentMethod: 'Google Ads',
+            purpose: 'Google Ads',
+            paymentMethod: 'Account Balance',
             transactionType: 'Debit',
             reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
           });
@@ -237,8 +241,9 @@ export const createYoutubeAd = async (req, res) => {
          const transaction = new TransactionModel({
           partnerId: partner._id,
           amount: body.budget.budgetAmount,  // Use the budget amount as the charge
-          status: 'Completed',
-          paymentMethod: 'Youtube Ads',
+          status: req.body.paymentGateway.status,
+          paymentMethod: 'Paystack',
+          purpose: 'Youtube Ads',
           transactionType: 'Debit',
           reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
         });
@@ -252,10 +257,10 @@ export const createYoutubeAd = async (req, res) => {
         await newAd.save();
 
         res.status(200).json({
-            message: 'Ad campaign created successfully!',
-            data: newAd, // Include the saved Ad data in the response
-            transaction: transaction,
-            success: true,
+          message: 'Ad campaign created successfully!',
+          data: newAd, // Include the saved Ad data in the response
+          transaction: transaction,
+          success: true,
         });
 
       } else {
@@ -281,7 +286,8 @@ export const createYoutubeAd = async (req, res) => {
             partnerId: partner._id,
             amount: body.budget.budgetAmount,  // Use the budget amount as the charge
             status: 'Completed',
-            paymentMethod: 'Youtube Ads',
+            purpose: 'Youtube Ads',
+            paymentMethod: 'Account Balance',
             transactionType: 'Debit',
             reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
           });
@@ -344,8 +350,9 @@ export const createLinkedinAd = async (req, res) => {
          const transaction = new TransactionModel({
           partnerId: partner._id,
           amount: body.budget.budgetAmount,  // Use the budget amount as the charge
-          status: 'Completed',
-          paymentMethod: 'LinkedIn Ads',
+          status: req.body.paymentGateway.status,
+          purpose: 'LinkedIn Ads',
+          paymentMethod: 'Paystack',
           transactionType: 'Debit',
           reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
         });
@@ -359,10 +366,10 @@ export const createLinkedinAd = async (req, res) => {
         await newAd.save();
   
         res.status(200).json({
-            message: 'Ad campaign created successfully!',
-            data: newAd, // Include the saved Ad data in the response
-            transaction: transaction,
-            success: true,
+          message: 'Ad campaign created successfully!',
+          data: newAd, // Include the saved Ad data in the response
+          transaction: transaction,
+          success: true,
         });
 
       } else {
@@ -388,7 +395,8 @@ export const createLinkedinAd = async (req, res) => {
             partnerId: partner._id,
             amount: body.budget.budgetAmount,  // Use the budget amount as the charge
             status: 'Completed',
-            paymentMethod: 'LinkedIn Ads',
+            purpose: 'LinkedIn Ads',
+            paymentMethod: 'Account Balance',
             transactionType: 'Debit',
             reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
           });
@@ -402,10 +410,10 @@ export const createLinkedinAd = async (req, res) => {
           await newAd.save();
     
           res.status(201).json({
-              message: 'Ad campaign created successfully!',
-              data: newAd, // Include the saved Ad data in the response
-              transaction: transaction,
-              success: true,
+            message: 'Ad campaign created successfully!',
+            data: newAd, // Include the saved Ad data in the response
+            transaction: transaction,
+            success: true,
           });
     
           } else {
@@ -420,8 +428,8 @@ export const createLinkedinAd = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         res.status(500).json({
-            message: 'Internal server error',
-            success: false,
+          message: 'Internal server error',
+          success: false,
         })
     }
 }
@@ -450,8 +458,9 @@ export const createTiktokAd = async (req, res) => {
          const transaction = new TransactionModel({
           partnerId: partner._id,
           amount: body.budget.budgetAmount,  // Use the budget amount as the charge
-          status: 'Completed',
-          paymentMethod: 'Tiktok Ads',
+          status: req.body.paymentGateway.status,
+          purpose: 'Tiktok Ads',
+          paymentMethod: 'Paystack',
           transactionType: 'Debit',
           reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
         });
@@ -465,10 +474,10 @@ export const createTiktokAd = async (req, res) => {
         await newAd.save();
 
         res.status(201).json({
-            message: 'Ad campaign created successfully!',
-            data: newAd, // Include the saved Ad data in the response
-            transaction: transaction,
-            success: true,
+          message: 'Ad campaign created successfully!',
+          data: newAd, // Include the saved Ad data in the response
+          transaction: transaction,
+          success: true,
         });
 
       } else {
@@ -494,7 +503,8 @@ export const createTiktokAd = async (req, res) => {
             partnerId: partner._id,
             amount: body.budget.budgetAmount,  // Use the budget amount as the charge
             status: 'Completed',
-            paymentMethod: 'Tiktok Ads',
+            purpose: 'Tiktok Ads',
+            paymentMethod: 'Account Balance',
             transactionType: 'Debit',
             reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
           });
@@ -508,10 +518,10 @@ export const createTiktokAd = async (req, res) => {
           await newAd.save();
 
           res.status(201).json({
-              message: 'Ad campaign created successfully!',
-              data: newAd, // Include the saved Ad data in the response
-              transaction: transaction,
-              success: true,
+            message: 'Ad campaign created successfully!',
+            data: newAd, // Include the saved Ad data in the response
+            transaction: transaction,
+            success: true,
           });
 
         } else {
@@ -524,8 +534,8 @@ export const createTiktokAd = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         res.status(500).json({
-            message: 'Internal server error',
-            success: false,
+          message: 'Internal server error',
+          success: false,
         })
     }
 }

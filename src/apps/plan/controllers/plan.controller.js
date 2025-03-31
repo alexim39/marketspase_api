@@ -13,6 +13,7 @@ export const createPlan = async (req, res) => {
   try {
     const { partnerId, amount, currency, reference, status, message, trans } = req.body;
 
+
     // Validate required fields
     if (!partnerId || !amount || !reference) {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
@@ -123,8 +124,9 @@ export const createPlan = async (req, res) => {
       const transaction = new TransactionModel({
         partnerId: partnerId,
         amount: amount,  // Use the budget amount as the charge
-        status: 'Completed',
-        paymentMethod: 'Plan purchase',
+        status: status,
+        paymentMethod: 'Paystack',
+        purpose: 'Plan purchase',
         transactionType: 'Debit',
         reference: Math.floor(100000000 + Math.random() * 900000000).toString() // Generate a random 9-digit number as a string
       });

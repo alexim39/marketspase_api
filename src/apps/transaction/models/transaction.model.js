@@ -11,6 +11,7 @@ const transactionSchema = new mongoose.Schema({
   reference: String,
   status: String,
   paymentMethod: String,
+  purpose: String,
   transactionType: String,
   bankDetail: {
     bankCode: { type: String }, // Removed required: false (default is false)

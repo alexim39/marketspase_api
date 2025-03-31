@@ -14,31 +14,37 @@ export const updateAdStatus = async () => {
 
         const startDate = new Date(campaignStartDate);
         const endDate = noEndDate ? now : new Date(campaignEndDate);
-        const diffInDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
-        const totalCost = Math.floor(diffInDays / 6) * COST_PER_6_DAYS;
-
-        const isWithinDateRange = noEndDate || (now >= startDate && now <= endDate);
-        const hasBudget = totalCost < budgetAmount;
-        const isActive = isWithinDateRange && hasBudget;
 
         let deliveryStatus = campaign.deliveryStatus;
+        let isActive = false; // Initialize isActive to false
 
-        if (isActive) {
-            deliveryStatus = "Active";
-        } else if (isWithinDateRange && !hasBudget) {
-            deliveryStatus = "Expired";
-        } else if (!isWithinDateRange) {
-            deliveryStatus = "Inactive";
-        } else if (!isActive && !hasBudget && !isWithinDateRange){
-            deliveryStatus = "Inactive";
-        } else if (!isActive && hasBudget && !isWithinDateRange){
-            deliveryStatus = "Inactive";
+        if (now < startDate) {
+            deliveryStatus = "Pending"; // Ad is pending if start date is in the future
         } else {
-            if (now > endDate && !noEndDate) {
-                if (totalCost < budgetAmount) {
-                    deliveryStatus = "Completed";
-                } else {
-                    deliveryStatus = "Finished";
+            const diffInDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+            const totalCost = Math.floor(diffInDays / 6) * COST_PER_6_DAYS;
+
+            const isWithinDateRange = noEndDate || (now >= startDate && now <= endDate);
+            const hasBudget = totalCost < budgetAmount;
+            isActive = isWithinDateRange && hasBudget;
+
+            if (isActive) {
+                deliveryStatus = "Active";
+            } else if (isWithinDateRange && !hasBudget) {
+                deliveryStatus = "Expired";
+            } else if (!isWithinDateRange) {
+                deliveryStatus = "Inactive";
+            } else if (!isActive && !hasBudget && !isWithinDateRange) {
+                deliveryStatus = "Inactive";
+            } else if (!isActive && hasBudget && !isWithinDateRange) {
+                deliveryStatus = "Inactive";
+            } else {
+                if (now > endDate && !noEndDate) {
+                    if (totalCost < budgetAmount) {
+                        deliveryStatus = "Completed";
+                    } else {
+                        deliveryStatus = "Finished";
+                    }
                 }
             }
         }
@@ -51,9 +57,7 @@ export const updateAdStatus = async () => {
     }));
 };
 
-
 /* Function to get all active ads */
-// export async function getActiveAds() {
 export const getActiveAds = async (req, res) => {
-  return await CampaignModel.find({ isActive: true });
-}
+    return await CampaignModel.find({ isActive: true });
+};
