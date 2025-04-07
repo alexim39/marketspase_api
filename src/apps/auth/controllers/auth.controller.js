@@ -12,26 +12,32 @@ dotenv.config()
 
 // Partner login
 export const signin = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const user = await PartnersModel.findOne({ email });
+    const user = await PartnersModel.findOne({ email });
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.status(400).json({ success: false, message: "Wrong email or password" });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(400).json({ success: false, message: "Wrong email or password" });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWTTOKENSECRET, {
+      expiresIn: "1d",
+    });
+
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({ success: true, message: "SignedIn" });
+
+  } catch (error) {
+    console.error("Error getting partner:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
-
-  const token = jwt.sign({ id: user._id }, process.env.JWTTOKENSECRET, {
-    expiresIn: "1d",
-  });
-
-  res.cookie("jwt", token, {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-
-  res.status(200).json({ success: true, message: "SignedIn" });
 };
 
 // Logout
