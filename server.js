@@ -20,6 +20,7 @@ import TransactionRouter from './src/apps/transaction/index.js';
 import SettingsRouter from './src/apps/settings/index.js';
 import DashboardRouter from './src/apps/dashboard/index.js';
 import AuthRouter from './src/apps/auth/index.js';
+import AnalyticsRouter from './src/apps/analytics/index.js';
 
 
 const port = process.env.PORT || 3000;
@@ -68,6 +69,7 @@ app.use('/transaction', TransactionRouter);
 app.use('/settings', SettingsRouter);
 app.use('/dashboard', DashboardRouter);
 app.use('/auth', AuthRouter);
+app.use('/analytics', AnalyticsRouter);
 
 
 // Convert `import.meta.url` to `__dirname` equivalent
