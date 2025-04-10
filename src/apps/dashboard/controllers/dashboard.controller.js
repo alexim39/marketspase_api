@@ -247,3 +247,46 @@ export const calculatePartnerIncome = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 }
+
+export const getRandomTestimonials = async (req, res) => {
+  try {
+    const count = parseInt(req.query.count, 10) || 10; // Default to 10 if count is not provided or invalid
+
+    // Find users with non-empty testimonial messages
+    const usersWithTestimonials = await PartnersModel.aggregate([
+      {
+        $match: {
+          'testimonial.message': { $exists: true, $ne: '' }, // Ensure testimonial.message exists and is not empty
+        },
+      },
+      { $sample: { size: count } }, // Randomly select 'count' documents
+      {
+        $project: {
+          _id: 0,
+          name: 1,
+          surname: 1,
+          'testimonial.message': 1,
+          'testimonial.country': 1,
+          'testimonial.state': 1,
+          profileImage: 1,
+        },
+      },
+    ]);
+
+    // Transform the data into the desired format
+    const formattedTestimonials = usersWithTestimonials.map(user => ({
+      name: `${user.name} ${user.surname}`,
+      location: `${user.testimonial.state || ''}, ${user.testimonial.country || ''}`.trim().replace(/^,|,$/g, ''), // Format location
+      message: user.testimonial.message,
+      avatar: user.profileImage || './img/default_pp.png', // Use default avatar if profileImage is not provided
+    }));
+
+    res.status(200).json({
+      data: formattedTestimonials,
+      success: true,
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};

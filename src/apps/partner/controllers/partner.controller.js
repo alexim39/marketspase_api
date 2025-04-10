@@ -190,3 +190,132 @@ export const updateUsername = async (req, res) => {
     });
   }
 };
+
+// Update a partner's SocialMedia
+export const updateSocialMedia = async (req, res) => {
+  try {
+    const endpoint = req.params.endpoint; // Get the endpoint from the URL
+    const { url, partnerId } = req.body; // Extract url and partnerId from the body
+
+    // construct the social media field name from the provided endpoint.
+    let socialMediaField;
+
+    switch (endpoint) {
+      case 'whatsappgrouplink':
+        socialMediaField = 'socialMedia.whatsappGroupLink';
+        break;
+      case 'whatsappchatlink':
+        socialMediaField = 'socialMedia.whatsappChatLink';
+        break;
+      case 'facebookPage':
+        socialMediaField = 'socialMedia.facebookPage';
+        break;
+      case 'linkedinPage':
+        socialMediaField = 'socialMedia.linkedinPage';
+        break;
+      case 'youtubePage':
+        socialMediaField = 'socialMedia.youtubePage';
+        break;
+      case 'instagramPage':
+        socialMediaField = 'socialMedia.instagramPage';
+        break;
+      case 'tiktokPage':
+        socialMediaField = 'socialMedia.tiktokPage';
+        break;
+      case 'twitterPage':
+        socialMediaField = 'socialMedia.twitterPage';
+        break;
+      default:
+        return res.status(400).json({ success: false, message: 'Invalid endpoint' });
+    }
+
+    // Update the partner's social media link
+    const updatedPartner = await PartnersModel.findByIdAndUpdate(
+      partnerId,
+      {
+        [socialMediaField]: url,
+      },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedPartner) {
+      return res.status(404).json({ success: false, message: 'Partner not found' });
+    }
+
+    res.status(200).json({
+      success: true, 
+      message: "Social page updated successfully!",
+    });
+
+  } catch (error) {
+    console.error('Error updating social media links:', error);
+    res.status(500).json({       
+      success: false, 
+      message: 'Internal server error' 
+    });
+  }
+}
+
+
+/**
+ * Update the testimonial value for a partner
+ * @param {Object} req - The request object containing partnerId and testimonial data
+ * @param {Object} res - The response object
+ */
+export const updateTestimonial = async (req, res) => {
+  try {
+    const { message, country, state, partnerId } = req.body;
+
+    console.log("Testimonial data:", req.body);
+
+    // Validate partnerId
+    if (!mongoose.Types.ObjectId.isValid(partnerId)) {
+      return res.status(400).json({ success: false, message: 'Invalid partner ID format' });
+    }
+
+    // Validate testimonial fields
+    if (!message || typeof message !== 'string') {
+      return res.status(400).json({ success: false, message: 'Testimonial message must be a non-empty string' });
+    }
+    if (country && typeof country !== 'string') {
+      return res.status(400).json({ success: false, message: 'Country must be a string' });
+    }
+    if (state && typeof state !== 'string') {
+      return res.status(400).json({ success: false, message: 'State must be a string' });
+    }
+
+    // Fetch the partner to check the current type of the testimonial field
+    const partner = await PartnersModel.findById(partnerId);
+
+    if (!partner) {
+      return res.status(404).json({ success: false, message: 'Partner not found' });
+    }
+
+    // Check if the testimonial field is a string
+    if (typeof partner.testimonial === 'string') {
+      // Convert the string to the new object structure
+      partner.testimonial = {
+        message: partner.testimonial, // Use the existing string as the message
+        country: country || 'Nigeria', // Default to 'Nigeria' if not provided
+        state: state || '', // Default to an empty string if not provided
+      };
+    } else {
+      // Update the testimonial object
+      partner.testimonial.message = message;
+      partner.testimonial.country = country || 'Nigeria';
+      partner.testimonial.state = state || '';
+    }
+
+    // Save the updated partner document
+    await partner.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Testimonial updated successfully',
+      partner,
+    });
+  } catch (error) {
+    console.error('Error updating testimonial:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
