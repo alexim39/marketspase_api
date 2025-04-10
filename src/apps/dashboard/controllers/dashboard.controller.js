@@ -290,3 +290,33 @@ export const getRandomTestimonials = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
+
+export const getRecentPayouts = async (req, res) => {
+  try {
+    const payouts = await TransactionModel.find({ transactionType: 'Credit', status: 'Successful' })
+      .populate('partnerId', 'name surname') // Fetch partner's name
+      .sort({ createdAt: -1 }) // Sort by latest first
+      .limit(15); // Limit to a reasonable number of recent payouts
+
+    const formattedPayouts = payouts.map((payout) => ({
+      name: `${payout.partnerId.name} ${payout.partnerId.surname.charAt(0)}.`,
+      amount: `₦${payout.amount.toLocaleString()}`, // Format amount with currency symbol
+      time: payout.createdAt.toLocaleString('en-US', { // Format time for readability
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      }),
+    }));
+
+    res.status(200).json({
+      data: formattedPayouts,
+      success: true,
+    });
+  } catch (error) {
+    console.error('Error fetching payout data:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+}
