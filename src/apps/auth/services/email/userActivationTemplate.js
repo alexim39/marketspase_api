@@ -1,4 +1,5 @@
 export const userAccountActivationEmailTemplate = (partner) => {
+  
   const year = new Date().getFullYear();
   const formattedName = partner.name ? partner.name.charAt(0).toUpperCase() + partner.name.slice(1).toLowerCase()  : '';
 
@@ -12,7 +13,7 @@ export const userAccountActivationEmailTemplate = (partner) => {
 
       <main style="padding: 20px;">
 
-        <p>Hi <strong>${formattedName}</strong>,</p>
+        <p>Hi ${formattedName},</p>
 
         <p>
           Kindly, use below link to activate your account.
@@ -43,7 +44,7 @@ export const userAccountActivationEmailTemplate = (partner) => {
 
         <p>© ${year} MarketSpase. All rights reserved.</p>
         <div>
-          Your online business for passive income
+          Your online business space for passive income
         </div>
 
       </footer>

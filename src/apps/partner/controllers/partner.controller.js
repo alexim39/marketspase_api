@@ -266,8 +266,6 @@ export const updateTestimonial = async (req, res) => {
   try {
     const { message, country, state, partnerId } = req.body;
 
-    console.log("Testimonial data:", req.body);
-
     // Validate partnerId
     if (!mongoose.Types.ObjectId.isValid(partnerId)) {
       return res.status(400).json({ success: false, message: 'Invalid partner ID format' });

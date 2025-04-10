@@ -10,6 +10,10 @@ export const userNotificationEmailTemplate = (userBooking) => {
     day: 'numeric'  
   });  
 
+  const year = new Date().getFullYear();
+  const formattedName = userBooking.name ? userBooking.name.charAt(0).toUpperCase() + userBooking.name.slice(1).toLowerCase()  : '';
+
+
   return `  
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">  
       <header style="text-align: center; padding: 10px; background-color: #f4f4f4;">  
@@ -17,13 +21,12 @@ export const userNotificationEmailTemplate = (userBooking) => {
       </header>  
 
       <main style="padding: 20px;">  
-        <h2>Your One-on-One Session is Confirmed – Let’s Meet in the space!</h2>  
 
-        <p>Hi <strong>${userBooking.name.toUpperCase()}</strong>,</p>  
+        <p>Hi ${formattedName},</p>  
 
         <p>  
-          Fantastic news! Your one-on-one session with MarketSpase has been successfully booked.   
-          This is your chance to meet with one of our agent and get clearification about our business.  
+          Fantastic news! Your one-on-one session on MarketSpase has been successfully booked.   
+          This is your chance to meet with a team member from MarketSpase and get clearification about our business.  
         </p>  
 
         <h3>  
@@ -34,7 +37,7 @@ export const userNotificationEmailTemplate = (userBooking) => {
           <li>Learn how our business works and how you can start generating passive income online.</li>  
           <li>Get personalized guidance tailored to your business goals.</li>  
           <li>Understand the tools available in our platform.</li>  
-          <li>Ask personalized questions and get answers directly from our agent.</li>  
+          <li>Ask personalized questions and get answers directly from our team.</li>  
         </ul>  
 
         <h3>  
@@ -63,6 +66,15 @@ export const userNotificationEmailTemplate = (userBooking) => {
           <strong>MarketSpase Team</strong>  
         </p>  
       </main>   
+       <br>
+      <footer style="text-align: center; padding: 20px; background-color: #f4f4f4; ; margin-top: 20px;">
+
+        <p>© ${year} MarketSpase. All rights reserved.</p>
+        <div>
+          Your online business space for passive income
+        </div>
+
+      </footer>
     </div>  
   `;  
 };

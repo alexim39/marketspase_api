@@ -1,4 +1,9 @@
-export const userWelcomeEmailTemplate = (surveyData) => `
+export const userWelcomeEmailTemplate = (surveyData) => {
+
+  const year = new Date().getFullYear();
+  const formattedName = partner.name ? partner.name.charAt(0).toUpperCase() + partner.name.slice(1).toLowerCase()  : '';
+
+  return  `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
 
     <header style="text-align: center; padding: 10px; background-color: #f4f4f4;">
@@ -6,16 +11,16 @@ export const userWelcomeEmailTemplate = (surveyData) => `
     </header>
 
     <main style="padding: 20px;">
-      <h2>Welcome to MarketSpase - Your Online Business Partner</h2>
+      <h2>Welcome to MarketSpase - Your online business space for passive income</h2>
 
-      <p>Hi <strong>${surveyData.name.toUpperCase()}</strong>,</p>
+      <p>Hi ${formattedName},</p>
 
       <p>
         Thank you for signing up on our platform! We're thrilled to introduce you to a unique online business model for creating residual income.
       </p>
 
       <p>
-        MarketSpase is a digital business platform enabling you to start and grow your own online business by purchasing a digital real estate asset in the internet ecosystem.
+        MarketSpase is a cutting-edge online business platform that enables individuals to establish and grow their own online business in the internet ecosystem.
       </p>
 
       <p>
@@ -25,12 +30,12 @@ export const userWelcomeEmailTemplate = (surveyData) => `
       <ul>
         <ol><strong>Low Startup Cost: </strong> It has an affordable entry point for all level of entrepreneurs.</ol>
         <ol><strong>Global Reach: </strong> You own a business that operate worldwide, all from the comfort of your home.</ol>
-        <ol><strong>Flexibility: </strong> Work on your own terms, anytime and anywhere.</ol>
-        <ol><strong>Passive Income Potential: </strong> Build residual income streams that work for you 24/7.</ol>
+        <ol><strong>Flexibility: </strong> Run the business on your own terms, anytime and anywhere.</ol>
+        <ol><strong>Passive Income Potential: </strong> Build passive income streams that work for you 24/7.</ol>
       </ul>
 
       <p>
-        When you join us, you can buy a slice of internet space, which you can resell to earn a profit.
+        When you join us, you become part of a community of like-minded individuals who are passionate about digital entrepreneurship. We are here to support you every step of the way, providing you with the tools and resources you need to succeed.
       </p>
 
       <p>
@@ -54,7 +59,15 @@ export const userWelcomeEmailTemplate = (surveyData) => `
       </div>
 
     </main>
-    <br>
-    <br>
+     <br>
+      <footer style="text-align: center; padding: 20px; background-color: #f4f4f4; ; margin-top: 20px;">
+
+        <p>© ${year} MarketSpase. All rights reserved.</p>
+        <div>
+          Your online business space for passive income
+        </div>
+
+      </footer>
   </div>
-`;
+`
+};
