@@ -1,14 +1,14 @@
 import express from 'express';
 import { 
-    prospectSurveyFormHandler,
-    prospectSignUpFormHandler
+    survey,
+    signUp
 } from '../controllers/get-started.controller.js'
 
 const GetStartedRouter = express.Router();
 
 // prospet user survey
-GetStartedRouter.post('/survey', prospectSurveyFormHandler);
+GetStartedRouter.post('/survey', survey);
 // prospet user survey
-GetStartedRouter.post('/signup', prospectSignUpFormHandler);
+GetStartedRouter.post('/signup', signUp);
 
 export default GetStartedRouter;

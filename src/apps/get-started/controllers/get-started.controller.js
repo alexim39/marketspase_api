@@ -16,7 +16,7 @@ import { generateUniqueUsername } from '../services/usernameGenerator.js'; // Ad
  * @param {Object} res - The Express response object.
  * @returns {Promise<void>}
  */
-export const prospectSurveyFormHandler = async (req, res) => {
+export const survey = async (req, res) => {
   try {
     const surveyData = req.body;
 
@@ -52,7 +52,7 @@ export const prospectSurveyFormHandler = async (req, res) => {
  * @param {Response} res - The Express response object.
  * @returns {Promise<void>}
  */
-export const prospectSignUpFormHandler = async (req, res) => {
+export const signUp = async (req, res) => {
     try {
         const signUpData = req.body;
 
@@ -67,7 +67,7 @@ export const prospectSignUpFormHandler = async (req, res) => {
         }).collation({ locale: "en", strength: 2 });
 
         if (existingPartner) {
-            return res.status(400).json({ success: false, message: "Prospect already exists as a partner" }); // Use 409 Conflict
+            return res.status(400).json({ success: false, message: "Prospect already exists. Try login" }); // Use 409 Conflict
         }
 
         // Validate that password and confirmPassword match
@@ -81,7 +81,7 @@ export const prospectSignUpFormHandler = async (req, res) => {
         }).collation({ locale: "en", strength: 2 });
 
         if (!surveyRecord) {
-            return res.status(404).json({ success: false, message: "Prospect survey record not found" }); // Use 404 Not Found
+            return res.status(404).json({ success: false, message: "Survey record not found" }); // Use 404 Not Found
         }
 
         // Hash the password

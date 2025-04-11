@@ -20,7 +20,7 @@ export const userPasswordResetLinkEmailTemplate = (partner) => {
 
         <br>
         <div style="text-align: center;">
-          <a href="https://marketspase.com/change-password?token=${partner.resetToken}" style="padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; text-align: center; margin: 1em 0;">
+          <a href="https://platform.marketspase.com/change-password?token=${partner.resetToken}" style="padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; text-align: center; margin: 1em 0;">
             Reset Password
           </a>
         </div>
