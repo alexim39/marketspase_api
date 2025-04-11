@@ -9,7 +9,7 @@ export const userPasswordResetLinkEmailTemplate = (partner) => {
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
       <header style="text-align: center; padding: 10px; background-color: #f4f4f4;">
         <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #050111;">
-          <img src="https://marketspase.com/img/logo.JPG" alt="MarketSpase Logo" style="height: 50px;" />
+          <img src="https://marketspase.com/img/logo.png" alt="MarketSpase Logo" style="height: 50px;" />
         </span>
       </header>
 
