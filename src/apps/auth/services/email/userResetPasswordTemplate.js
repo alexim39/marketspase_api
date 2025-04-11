@@ -9,16 +9,7 @@ export const userPasswordResetLinkEmailTemplate = (partner) => {
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
       <header style="text-align: center; padding: 10px; background-color: #f4f4f4;">
         <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #050111;">
-
-         <svg width="200" height="100" xmlns="http://www.w3.org/2000/svg">
-          <g>
-            <circle cx="30" cy="50" r="20" stroke="black" stroke-width="2" fill="none" />
-            <path d="M 20 50 A 10 10 0 0 1 40 50" stroke="black" stroke-width="2" fill="none" />
-            <path d="M 30 30 L 30 50 L 50 50" stroke="black" stroke-width="2" fill="none" />
-            <text x="60" y="55" font-family="sans-serif" font-size="24" fill="black">MarketSpase</text>
-          </g>
-        </svg>
-
+          <img src="https://marketspase.com/img/logo.JPG" alt="MarketSpase Logo" style="height: 50px;" />
         </span>
       </header>
 
