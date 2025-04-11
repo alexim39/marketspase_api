@@ -11,13 +11,18 @@ export const userNotificationEmailTemplate = (userBooking) => {
   });  
 
   const year = new Date().getFullYear();
-  const formattedName = userBooking.name ? userBooking.name.charAt(0).toUpperCase() + userBooking.name.slice(1).toLowerCase()  : '';
+  const formattedName = partner.name ? partner.name.split(' ') // Split the name into an array of words
+  .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter of each word
+  .join(' ') // Join the words back into a single string
+: '';
 
 
   return `  
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">  
       <header style="text-align: center; padding: 10px; background-color: #f4f4f4;">  
-        <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #050111;">MarketSpase</span>  
+         <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #050111;">
+          <img src="https://marketspase.com/img/logo.png" alt="MarketSpase Logo" style="height: 50px;" />
+        </span>
       </header>  
 
       <main style="padding: 20px;">  
