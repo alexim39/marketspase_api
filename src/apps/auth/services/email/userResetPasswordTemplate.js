@@ -10,13 +10,14 @@ export const userPasswordResetLinkEmailTemplate = (partner) => {
       <header style="text-align: center; padding: 10px; background-color: #f4f4f4;">
         <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #050111;">
 
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="200" height="50">
-              <g>
-                  <path d="M0 0h24v24H0z" fill="none"/>
-                  <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.1-.22 2.14-.61 3.09l1.46 1.46C19.62 14.88 20 13.48 20 12c0-4.42-3.58-8-8-8zm-6.35.35L4.22 5.78C3.38 7.12 3 8.52 3 10c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6 0-1.1.22-2.14.61-3.09L5.65 4.35z"/>
-                  <text x="30" y="20" font-family="sans-serif" font-size="16" fill="black">MarketSpase</text>
-              </g>
-          </svg>
+         <svg width="200" height="100" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <circle cx="30" cy="50" r="20" stroke="black" stroke-width="2" fill="none" />
+            <path d="M 20 50 A 10 10 0 0 1 40 50" stroke="black" stroke-width="2" fill="none" />
+            <path d="M 30 30 L 30 50 L 50 50" stroke="black" stroke-width="2" fill="none" />
+            <text x="60" y="55" font-family="sans-serif" font-size="24" fill="black">MarketSpase</text>
+          </g>
+        </svg>
 
         </span>
       </header>
