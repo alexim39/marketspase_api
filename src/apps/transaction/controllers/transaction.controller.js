@@ -31,7 +31,9 @@ export const getTransactions = async (req, res) => {
 
 // Partner withdrawal request
 export const withdrawRequest = async (req, res) => {
-  const { bank, accountNumber, accountName, amount, partnerId } = req.body;
+  const { bank, accountNumber, accountName, amount, partnerId, saveAccount, bankName } = req.body;
+
+  //console.log("withdrawRequest", req.body);return;
 
   try {
     // Find the partner by ID
@@ -95,6 +97,24 @@ export const withdrawRequest = async (req, res) => {
       // const userSubject = "Withdrawal Successful";
       // const userMessage = userWithdrawalEmailTemplate(partner, req.body, "Successful");
       // await sendEmail(partner.email, userSubject, userMessage);
+
+
+      // If the user chooses to save the account, add it to their saved accounts
+      if (saveAccount) {
+        const existingAccount = partner.savedAccounts.find(
+          (account) => account.accountNumber === accountNumber
+        );
+
+        if (!existingAccount) {
+          partner.savedAccounts.push({
+            bankCode: bank,
+            accountNumber: accountNumber,
+            accountName: accountName,
+            bank: bankName,
+          });
+          await partner.save();
+        }
+      }
 
       return res.status(200).json({
         message: "Withdrawal successful, payment has been processed.",

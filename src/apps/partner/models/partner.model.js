@@ -137,6 +137,26 @@ const partnersSchema = mongoose.Schema(
         type: String, 
       },
     },
+    savedAccounts: [
+      {
+        bank: {
+          type: String,
+          required: true,
+        },
+        bankCode: {
+          type: String,
+          required: true,
+        },
+        accountNumber: {
+          type: String,
+          required: true,
+        },
+        accountName: {
+          type: String,
+          required: true,
+        },
+      }
+    ],
   },
   {
     timestamps: true,
