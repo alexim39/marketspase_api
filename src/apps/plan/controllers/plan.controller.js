@@ -8,8 +8,8 @@ import { CalculateCompensationAndDistribute } from '../services/compensator/comp
 import { CampaignModel } from '../../ads/models/campaign.js';
 import { TransactionModel } from '../../transaction/models/transaction.model.js';
 
-// Create and save a new transaction
-export const createPlan = async (req, res) => {
+// Create and save a new purchase plan
+export const purchasePlan = async (req, res) => {
   try {
     const { partnerId, amount, currency, reference, status, message, trans } = req.body;
 
@@ -133,7 +133,7 @@ export const createPlan = async (req, res) => {
       await transaction.save();
 
       res.status(200).json({
-        message: 'Transaction saved successfully!',
+        message: 'Plan purchase completed successfully!',
         plan: savedPlan,
         success: true,
       });

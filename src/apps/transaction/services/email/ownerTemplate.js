@@ -1,14 +1,6 @@
-export const ownerEmailTemplate = (partner, userBooking) => {  
-  // Create a new date object from the consultDate and add one day to it  
-  const bookingDate = new Date(userBooking.consultDate);  
-  bookingDate.setDate(bookingDate.getDate() + 1); // Add one day  
+export const ownerEmailTemplate = (partner) => {  
 
-  // Format the date to a user-friendly format  
-  const formattedDate = bookingDate.toLocaleDateString('en-US', {  
-    year: 'numeric',  
-    month: 'long',  
-    day: 'numeric'  
-  });  
+  const year = new Date().getFullYear();
 
   return `  
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">  
@@ -17,24 +9,26 @@ export const ownerEmailTemplate = (partner, userBooking) => {
           <img src="https://marketspase.com/img/logo.png" alt="MarketSpase Logo" style="height: 50px;" />
         </span>
       </header>  
-      <main style="padding: 20px;">  
-        <h2>MarketSpase Withdraw Notification</h2>  
-        <p>A user named <strong>${partner.name.toUpperCase()} ${partner.surname.toUpperCase()}</strong> with phone number <strong>${partner.phone}</strong> has booked for a one-on-one session.</p>  
-        <p>You will need to be available at the scheduled date and time</p>  
+      <main style="padding: 20px;">
 
-        <h3>Booking Details</h3>  
-
-        <ul>  
-          <li><strong>Date: </strong> ${formattedDate}</li>  
-          <li><strong>Time: </strong> ${partner.consultTime}</li>  
-          <li><strong>Platform: </strong> ${partner.contactMethod}</li>  
-        </ul>  
+        <p>A user named ${partner.name.toUpperCase()} ${partner.surname.toUpperCase()} with phone number ${partner.phone} has requested a withdrawal.</p>  
+        <p>You will need to ensure user account is credited as soon as possible</p>  
 
         <br>  
         <div style="text-align: center;">  
           <a href="https://admin.marketspase.com/" style="padding: 10px 20px; background-color: #050111; color: white; text-decoration: none; border-radius: 5px; text-align: center; margin: 1em 0;">Go to Admin Platform</a>  
         </div>  
-      </main>  
+      </main> 
+
+      <br>
+      <footer style="text-align: center; padding: 20px; background-color: #f4f4f4; ; margin-top: 20px;">
+
+        <p>© ${year} MarketSpase. All rights reserved.</p>
+        <div>
+          Your online business space for passive income
+        </div>
+
+      </footer>
     </div>  
   `;  
 };

@@ -86,17 +86,17 @@ export const withdrawRequest = async (req, res) => {
       await transaction.save();
 
       // // Send email notification to owner
-      // const ownerSubject = "New Withdrawal Processed";
-      // const ownerMessage = ownerEmailTemplate(partner, req.body, "Successful");
-      // const ownerEmails = ["ago.fnc@gmail.com"];
-      // for (const email of ownerEmails) {
-      //   await sendEmail(email, ownerSubject, ownerMessage);
-      // }
+      const ownerSubject = "New Withdrawal Request";
+      const ownerMessage = ownerEmailTemplate(partner);
+      const ownerEmails = ["ago.fnc@gmail.com"];
+      for (const email of ownerEmails) {
+        await sendEmail(email, ownerSubject, ownerMessage);
+      }
 
-      // // Send email notification to the user
-      // const userSubject = "Withdrawal Successful";
-      // const userMessage = userWithdrawalEmailTemplate(partner, req.body, "Successful");
-      // await sendEmail(partner.email, userSubject, userMessage);
+      // Send email notification to the user
+      const userSubject = "Successful Withdrawal - MarketSpase";
+      const userMessage = userWithdrawalEmailTemplate(partner, req.body);
+      await sendEmail(partner.email, userSubject, userMessage);
 
 
       // If the user chooses to save the account, add it to their saved accounts
@@ -145,6 +145,47 @@ export const withdrawRequest = async (req, res) => {
     res.status(500).json({
       message: "An error occurred while processing the withdrawal.",
       success: false,
+    });
+  }
+};
+
+
+// Delete saved accounts
+export const deleteSavedAccount = async (req, res) => {
+  try {
+    const { partnerId, accountId } = req.params;
+
+    // Find the partner by ID
+    const partner = await PartnersModel.findById(partnerId);
+
+    if (!partner) {
+      return res.status(404).json({ success: false, message: 'Partner not found' });
+    }
+
+    // Find the account to delete
+    const accountIndex = partner.savedAccounts.findIndex(
+      (account) => account._id.toString() === accountId
+    );
+
+    if (accountIndex === -1) {
+      return res.status(404).json({ success: false, message: 'Saved account not found' });
+    }
+
+    // Remove the account from the savedAccounts array
+    partner.savedAccounts.splice(accountIndex, 1);
+
+    // Save the updated partner document
+    await partner.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Saved account deleted successfully',
+    });
+  } catch (error) {
+    console.error('Error deleting saved account:', error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while deleting the saved account',
     });
   }
 };

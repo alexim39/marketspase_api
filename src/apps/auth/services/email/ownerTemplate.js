@@ -39,7 +39,7 @@ export const ownerEmailTemplate = (userBooking) => {
           <a href="https://admin.marketspase.com/" style="padding: 10px 20px; background-color: #050111; color: white; text-decoration: none; border-radius: 5px; text-align: center; margin: 1em 0;">Go to Admin Platform</a>  
         </div>  
       </main>  
-       <br>
+      <br>
       <footer style="text-align: center; padding: 20px; background-color: #f4f4f4; ; margin-top: 20px;">
 
         <p>© ${year} MarketSpase. All rights reserved.</p>

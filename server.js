@@ -21,6 +21,7 @@ import SettingsRouter from './src/apps/settings/index.js';
 import DashboardRouter from './src/apps/dashboard/index.js';
 import AuthRouter from './src/apps/auth/index.js';
 import AnalyticsRouter from './src/apps/analytics/index.js';
+import ProfitRouter from './src/apps/profit/index.js';
 
 
 const port = process.env.PORT || 3000;
@@ -70,6 +71,7 @@ app.use('/settings', SettingsRouter);
 app.use('/dashboard', DashboardRouter);
 app.use('/auth', AuthRouter);
 app.use('/analytics', AnalyticsRouter);
+app.use('/profit', ProfitRouter);
 
 
 // Convert `import.meta.url` to `__dirname` equivalent

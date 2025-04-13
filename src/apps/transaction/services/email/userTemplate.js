@@ -1,14 +1,10 @@
-export const userWithdrawalEmailTemplate = (userBooking) => {  
-  // Create a new date object from the consultDate and add one day to it  
-  const bookingDate = new Date(userBooking.consultDate);  
-  bookingDate.setDate(bookingDate.getDate() + 1); // Add one day  
-
-  // Format the date to a user-friendly format  
-  const formattedDate = bookingDate.toLocaleDateString('en-US', {  
-    year: 'numeric',  
-    month: 'long',  
-    day: 'numeric'  
-  });  
+export const userWithdrawalEmailTemplate = (partner, payload) => {  
+ 
+  const year = new Date().getFullYear();
+  const formattedName = partner.name ? partner.name.split(' ') // Split the name into an array of words
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter of each word
+      .join(' ') // Join the words back into a single string
+  : '';
 
   return `  
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">  
@@ -19,42 +15,23 @@ export const userWithdrawalEmailTemplate = (userBooking) => {
       </header>  
 
       <main style="padding: 20px;">  
-        <h2>Your One-on-One Session is Confirmed – Let’s Meet in the space!</h2>  
 
-        <p>Hi <strong>${userBooking.name.toUpperCase()}</strong>,</p>  
+        <p>Hi ${formattedName},</p>  
 
         <p>  
-          Fantastic news! Your one-on-one session with MarketSpase has been successfully booked.   
-          This is your chance to meet with one of our agent and get clearification about our business.  
+         We are pleased to inform you that your withdrawal request of N${payload.amount} has been successfully processed.
         </p>  
 
-        <h3>  
-          Here are some of the benefits you stand to get on the session:  
-        </h3>  
+       <p>
+       The funds should arrive in your ${payload.bankName} account soon.
+       </p>
 
-        <ul>  
-          <li>Learn how our business works and how you can start generating passive income online.</li>  
-          <li>Get personalized guidance tailored to your business goals.</li>  
-          <li>Understand the tools available in our platform.</li>  
-          <li>Ask personalized questions and get answers directly from our agent.</li>  
-        </ul>  
-
-        <h3>  
-          Here are your session details:  
-        </h3>  
-
-        <ul>  
-          <li><strong>Date: </strong> ${formattedDate}</li>  
-          <li><strong>Time: </strong> ${userBooking.consultTime}</li>  
-          <li><strong>Platform: </strong> ${userBooking.contactMethod}</li>  
-        </ul>  
+       <p>
+       If you have any questions or concerns, please don't hesitate to contact us.
+       </p>
 
         <p>  
-          If you have further questions, please visit our <a href="https://marketspase.com/faq" style="color: #050111;">FAQ page</a> for answers to some questions about our business or reach out to us at contacts@marketspase.com  
-        </p>  
-
-        <p>  
-          Let's create your digital space together!
+          Thank you for trusting in our business.
         </p>  
 
         <p>  
@@ -65,6 +42,18 @@ export const userWithdrawalEmailTemplate = (userBooking) => {
           <strong>MarketSpase Team</strong>  
         </p>  
       </main>   
+
+      <br>
+      <footer style="text-align: center; padding: 20px; background-color: #f4f4f4; ; margin-top: 20px;">
+
+        <p>© ${year} MarketSpase. All rights reserved.</p>
+        <div>
+          Your online business for passive income
+        </div>
+
+      </footer>
+
+
     </div>  
   `;  
 };
