@@ -1,4 +1,4 @@
-export const userWelcomeEmailTemplate = (surveyData) => {
+export const userWelcomeEmailTemplate = (partner) => {
 
   const year = new Date().getFullYear();
   const formattedName = partner.name ? partner.name.charAt(0).toUpperCase() + partner.name.slice(1).toLowerCase()  : '';

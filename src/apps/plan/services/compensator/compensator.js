@@ -3,7 +3,8 @@ import { PlanModel } from "../../models/plan.model.js";
 import { PartnersModel } from "../../../partner/models/partner.model.js";
 import { CampaignModel } from "../../../ads/models/campaign.js";
 import { ProfitModel } from "../../../profit/models/profit.model.js"; // Import ProfitModel
-
+import { sendEmail } from "../../../../services/emailService.js";
+import { userProfitEmailTemplate } from "../email/userProfitEmailTemplate.js"; // Import the email template
 export const CalculateCompensationAndDistribute = async (amount, initiatingPartnerId) => {
   try {
     // Define compensation structure with percentage and distribution for each plan
@@ -119,6 +120,18 @@ export const CalculateCompensationAndDistribute = async (amount, initiatingPartn
               currency: "NGN", // Replace with the appropriate currency if needed
               plan: plan,
             });
+
+            const userObject = {
+              name: updatedPartner.name,
+              email: updatedPartner.email,
+              amount: profit,
+              plan: plan,
+            }
+
+             // Send welcome email to the user
+              const userSubject = `Great news! Your MarketSpase business Just Made ${new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 }).format(profit)}!`;
+              const userMessage = userProfitEmailTemplate(userObject);
+              await sendEmail(userObject.email, userSubject, userMessage);
 
             await profitEntry.save(); // Save the profit entry
 

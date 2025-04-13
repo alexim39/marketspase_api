@@ -179,10 +179,8 @@ export const getMonthlyProfitByPartner = async (req, res) => {
   
       res.status(200).json({
         success: true,
-        profits: {
-          labels,
-          data,
-        },
+        labels,
+        data,
       });
     } catch (error) {
       console.error('Error fetching monthly profits:', error);

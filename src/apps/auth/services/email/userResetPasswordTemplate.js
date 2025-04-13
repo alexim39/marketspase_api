@@ -29,7 +29,7 @@ export const userPasswordResetLinkEmailTemplate = (partner) => {
         </div>
 
         <p>
-          Let's build now to earn passively forever.
+          Let's build now to earn passively tomorrow.
         </p>
 
         <p>
