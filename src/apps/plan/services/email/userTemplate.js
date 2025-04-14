@@ -16,7 +16,6 @@ export const userEmailTemplate = (userData) => {
     </header>
 
     <main style="padding: 20px;">
-      <h2>MarketSpase Spase Plan Confirmationr</h2>
 
       <p>Hi ${formattedName},</p>
 

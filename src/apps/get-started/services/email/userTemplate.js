@@ -22,7 +22,7 @@ export const userWelcomeEmailTemplate = (partner) => {
       </p>
 
       <p>
-        MarketSpase is a cutting-edge online business platform that enables individuals to establish and grow their own online business in the internet ecosystem.
+        MarketSpase is a cutting-edge online business platform that enables individuals to establish and grow their own business in the internet ecosystem.
       </p>
 
       <p>
@@ -44,9 +44,9 @@ export const userWelcomeEmailTemplate = (partner) => {
         If you have any questions, please visit our <a href="https://marketspase.com/faq" style="color: #050111;">FAQ page</a> for answers to some questions about our business or reach out to us at contacts@marketspase.com
       </p>
 
-      <p>
-        Let's create your digital space together!
-      </p>
+       <p>
+          Let's build now to earn passively tomorrow.
+        </p>
 
       <p>
       Best regards,

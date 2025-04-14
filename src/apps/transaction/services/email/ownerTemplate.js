@@ -1,6 +1,10 @@
 export const ownerEmailTemplate = (partner) => {  
 
   const year = new Date().getFullYear();
+  const formattedName = partner.name ? partner.name.split(' ') // Split the name into an array of words
+  .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter of each word
+  .join(' ') // Join the words back into a single string
+: '';
 
   return `  
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">  
@@ -11,7 +15,7 @@ export const ownerEmailTemplate = (partner) => {
       </header>  
       <main style="padding: 20px;">
 
-        <p>A user named ${partner.name.toUpperCase()} ${partner.surname.toUpperCase()} with phone number ${partner.phone} has requested a withdrawal.</p>  
+        <p>A user named ${formattedName} with email ${partner.email} has requested a withdrawal.</p>  
         <p>You will need to ensure user account is credited as soon as possible</p>  
 
         <br>  

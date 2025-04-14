@@ -92,7 +92,7 @@ export const purchasePlan = async (req, res) => {
       await Promise.all(ownerEmails.map(email => sendEmail(email, ownerSubject, ownerMessage)));
 
       // Send welcome email to the user
-      const userSubject = 'MarketSpase Spase Plan Confirmation';
+      const userSubject = 'MarketSpase Plan Confirmation';
       const userMessage = userEmailTemplate(updatedPartner);
       await sendEmail(updatedPartner.email, userSubject, userMessage);
 
